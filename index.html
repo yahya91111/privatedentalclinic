@@ -1,0 +1,1769 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام تفتيش العيادات</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            direction: rtl;
+            background-color: #f3f4f6; 
+        }
+        .app-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start; 
+            align-items: center;
+            padding: 1rem;
+            padding-top: 5rem; /* Add padding to prevent overlap with FAB */
+        }
+        .card {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            width: 100%;
+            max-width: 72rem; 
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+        }
+        .login-card { 
+            max-width: 28rem;
+            margin-top: auto; 
+            margin-bottom: auto; 
+        }
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border-radius: 0.375rem;
+            border: 1px solid #d1d5db;
+            box-sizing: border-box;
+            margin-bottom: 1rem;
+        }
+        .form-select {
+            background-color: white;
+        }
+        .form-textarea {
+            min-height: 80px;
+        }
+        .action-button, .subsection-button {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-align: center;
+            margin-top: 0.5rem;
+        }
+        .small-edit-button {
+            padding: 0.5rem 1rem; 
+            font-size: 0.875rem; 
+            width: auto; 
+            margin-top: 1rem; 
+            margin-right: auto; 
+            display: block; 
+        }
+        .subsection-button {
+            background-color: #60a5fa; 
+            color: white;
+        }
+        .subsection-button:hover {
+            background-color: #3b82f6; 
+        }
+        .submit-button { background-color: #3b82f6; color: white; }
+        .logout-button { background-color: #ef4444; color: white; }
+        .clinic-button { background-color: #10b981; color: white; }
+        .add-clinic-button { background-color: #8b5cf6; color: white; }
+        .back-button { background-color: #6b7280; color: white; }
+        .edit-button { background-color: #f59e0b; color: white; } 
+        .save-button { background-color: #22c55e; color: white; }
+        .cancel-button { background-color: #78716c; color: white; }
+        .details-button { background-color: #0ea5e9; color: white; } 
+        .staff-info-button { background-color: #d946ef; color: white; } 
+        .all-notes-button { background-color: #14b8a6; color: white; } 
+        .implants-button { background-color: #ec4899; color: white; } 
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #374151;
+            text-align: right; 
+        }
+        #message, #editFormMessage, #addFormMessage, #detailFormMessage {
+            margin-top: 1rem;
+            padding: 0.75rem;
+            border-radius: 0.375rem;
+            text-align: center;
+        }
+        .message-success { background-color: #d1fae5; color: #065f46; }
+        .message-error { background-color: #fee2e2; color: #991b1b; }
+        .hidden { display: none !important; } /* Added !important for FAB visibility */
+
+        .section-title { 
+            font-size: 1.25rem; font-weight: 600; color: #1f2937; 
+            margin-bottom: 1rem; border-bottom: 1px solid #e5e7eb; padding-bottom: 0.5rem;
+        }
+        .subsection-title {
+            font-size: 1.1rem; font-weight: 600; color: #374151; 
+            margin-top: 1.25rem; margin-bottom: 0.75rem;
+        }
+        .detail-view-item p, .all-notes-item p { margin-bottom: 0.75rem; color: #4b5563; }
+        .detail-view-item p strong, .all-notes-item p strong { color: #374151; }
+        .profile-grid, .form-grid, .detail-view-grid, .all-notes-grid { 
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+            gap: 1.5rem; 
+        }
+        .profile-item, .form-item, .detail-view-item, .all-notes-item { 
+            background-color: #f9fafb; padding: 1.25rem; border-radius: 0.375rem; 
+        }
+        .col-span-full { grid-column: 1 / -1; }
+        .button-group { display: flex; gap: 0.5rem; margin-top: 1.5rem; }
+        .button-group .action-button { flex-grow: 1; }
+        .dashboard-actions { margin-top: 1.5rem; border-top: 1px solid #e5e7eb; padding-top: 1.5rem; }
+        .detail-section-card { margin-top: 1rem; }
+        .staff-list { list-style-type: disc; padding-right: 20px; }
+        .staff-list li { margin-bottom: 0.5rem; }
+        .ic-subsection-container { margin-top: 1rem; padding-top: 1rem; border-top: 1px dashed #cbd5e1; }
+       
+        .table-container { overflow-x: auto; margin-bottom: 2rem; }
+        table { width: 100%; border-collapse: collapse; margin-top: 1rem; table-layout: fixed; } 
+        th, td { border: 1px solid #e5e7eb; padding: 0.5rem; text-align: right; word-wrap: break-word; } 
+        th { background-color: #f3f4f6; font-weight: 600; font-size: 0.875rem; } 
+        td input[type="text"], td input[type="date"] { font-size: 0.875rem; padding: 0.4rem; width: 100%; box-sizing: border-box; }
+
+        /* FAB Styles */
+        #fab-container {
+            /* No specific width/height, it's a container for absolutely positioned items */
+        }
+        #main-fab {
+            /* z-index to be above options when they are collapsed (if they are direct children) */
+            z-index: 25; 
+        }
+        .fab-option-button {
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.5); /* Initial state: centered and small */
+            z-index: 20; /* Below main FAB when collapsed */
+        }
+        #fab-container.fab-active #fab-option-profile {
+            transform: translate(-50%, -50%) translateY(-5rem) scale(1); /* Move up */
+            opacity: 1;
+            pointer-events: auto;
+        }
+        #fab-container.fab-active #fab-option-add-clinic {
+            transform: translate(-50%, -50%) translateX(-5rem) scale(1); /* Move left */
+            opacity: 1;
+            pointer-events: auto;
+        }
+        #fab-container.fab-active #fab-option-logout {
+            transform: translate(-50%, -50%) translateY(5rem) scale(1); /* Move down */
+            opacity: 1;
+            pointer-events: auto;
+        }
+         #fab-container.fab-active #main-fab #fab-icon-menu {
+            opacity: 0;
+        }
+        #fab-container.fab-active #main-fab #fab-icon-close {
+            opacity: 1;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="fab-container" class="fixed top-6 right-6 z-50 hidden">
+        <button id="fab-option-profile" class="fab-option-button absolute w-12 h-12 bg-green-500 hover:bg-green-600 rounded-full flex items-center justify-center text-white shadow-md opacity-0 transform scale-50 transition-all duration-300 ease-in-out pointer-events-none" title="الملف الشخصي">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+            </svg>
+        </button>
+        <button id="fab-option-add-clinic" class="fab-option-button absolute w-12 h-12 bg-purple-500 hover:bg-purple-600 rounded-full flex items-center justify-center text-white shadow-md opacity-0 transform scale-50 transition-all duration-300 ease-in-out pointer-events-none" title="إضافة عيادة جديدة">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+            </svg>
+        </button>
+        <button id="fab-option-logout" class="fab-option-button absolute w-12 h-12 bg-red-500 hover:bg-red-600 rounded-full flex items-center justify-center text-white shadow-md opacity-0 transform scale-50 transition-all duration-300 ease-in-out pointer-events-none" title="تسجيل الخروج">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
+            </svg>
+        </button>
+
+        <button id="main-fab" class="relative w-16 h-16 bg-blue-600 text-white rounded-full flex items-center justify-center shadow-xl hover:bg-blue-700 transition-transform duration-200 ease-in-out focus:outline-none">
+            <svg id="fab-icon-menu" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-7 h-7 transition-opacity duration-200 opacity-100">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+            <svg id="fab-icon-close" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-7 h-7 absolute opacity-0 transition-opacity duration-200 pointer-events-none">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </button>
+    </div>
+
+    <div class="app-container">
+        <div id="loginSection" class="card login-card">
+            <h1 class="text-2xl font-bold text-center text-gray-800 mb-6">تسجيل الدخول</h1>
+            <form id="loginForm">
+                <div>
+                    <label for="userType" class="form-label">نوع الحساب:</label>
+                    <select id="userType" name="userType" class="form-select">
+                        <option value="admin">مدير</option>
+                        <option value="doctor">طبيب</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="username" class="form-label">اسم المستخدم:</label>
+                    <input type="text" id="username" name="username" class="form-input" required>
+                </div>
+                <div>
+                    <label for="password" class="form-label">كلمة المرور:</label>
+                    <input type="password" id="password" name="password" class="form-input" required>
+                </div>
+                <button type="submit" class="action-button submit-button">تسجيل الدخول</button>
+            </form>
+            <div id="message" role="alert"></div>
+        </div>
+
+        <div id="dashboardSection" class="card hidden">
+            <h1 id="dashboardTitle" class="section-title text-center">لوحة التحكم</h1>
+            <div id="clinicList" class="mb-4"></div>
+            <div class="dashboard-actions">
+                <button id="showAddClinicFormButton" class="action-button add-clinic-button mb-2">إضافة عيادة جديدة</button>
+                <button id="logoutButton" class="action-button logout-button">تسجيل الخروج</button>
+            </div>
+        </div>
+
+        <div id="clinicProfileSection" class="card hidden">
+            <h1 id="clinicProfileTitle" class="section-title text-center">ملف العيادة</h1>
+            <div id="clinicProfileContent" class="space-y-4">
+                </div>
+            <button id="editClinicButton" class="action-button edit-button small-edit-button">تعديل</button>
+           
+            <h2 class="section-title mt-6">نماذج التفتيش التفصيلية</h2>
+            <div class="form-grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"> 
+                <button id="showStaffInformationButton" data-section="staffInformation" class="action-button staff-info-button">Staff Information</button>
+                <button id="showInfectionControlButton" data-section="infectionControl" class="action-button details-button">Infection Control</button>
+                <button id="showDentalLabButton" data-section="dentalLab" class="action-button details-button">Dental Lab</button>
+                <button id="showXrayRoomButton" data-section="xrayRoom" class="action-button details-button">X-Ray Room</button>
+                <button id="showImplantsButton" data-section="implants" class="action-button implants-button">Implants</button>
+                <button id="showAllNotesButton" class="action-button all-notes-button">All Notes</button>
+            </div>
+            <div class="button-group mt-6">
+                <button id="backToListButton" class="action-button back-button">العودة إلى القائمة</button>
+            </div>
+        </div>
+
+        <div id="profileSection" class="card hidden">
+            <h1 class="section-title text-center">الملف الشخصي</h1>
+            <div class="text-center p-8">
+                <p class="text-lg text-gray-700">محتوى قسم الملف الشخصي سيوضع هنا لاحقاً.</p>
+                <p class="text-sm text-gray-500 mt-2">(هذا القسم قيد الإنشاء)</p>
+            </div>
+            <div class="button-group mt-6">
+                <button id="backToDashboardFromProfileButton" class="action-button back-button">العودة إلى لوحة التحكم</button>
+            </div>
+        </div>
+       
+        <div id="editClinicFormSection" class="card hidden">
+            <h1 id="editClinicFormTitle" class="section-title text-center">تعديل البيانات الأساسية للعيادة</h1>
+            <form id="editClinicForm" class="form-grid"></form> 
+            <div class="button-group">
+                <button type="button" id="saveChangesButton" class="action-button save-button">حفظ التعديلات</button>
+                <button type="button" id="cancelEditButton" class="action-button cancel-button">إلغاء</button>
+            </div>
+            <div id="editFormMessage" class="mt-4 text-center"></div>
+        </div>
+
+        <div id="addClinicFormSection" class="card hidden">
+            <h1 class="section-title text-center">إضافة عيادة جديدة</h1>
+            <form id="addClinicForm" class="form-grid"></form> 
+            <div class="button-group">
+                <button type="button" id="saveNewClinicButton" class="action-button save-button">حفظ العيادة الجديدة</button>
+                <button type="button" id="cancelAddClinicButton" class="action-button cancel-button">إلغاء</button>
+            </div>
+            <div id="addFormMessage" class="mt-4 text-center"></div>
+        </div>
+       
+        <div id="staffInformationSection" class="card hidden detail-section-card">
+            <h1 id="staffInformationTitle" class="section-title text-center">Staff Information Details</h1>
+            <div id="staffInformationContent" class="detail-view-grid"></div>
+            <div class="button-group">
+                 <button type="button" class="action-button edit-button" onclick="prepareEditForDetailSubSection('staffInformation', null)">تعديل هذا القسم</button>
+                <button type="button" class="action-button back-button" onclick="hideDetailSectionAndSubsections('staffInformationSection', 'clinicProfileSection')">العودة لملف العيادة</button>
+            </div>
+        </div>
+
+        <div id="infectionControlSection" class="card hidden detail-section-card">
+            <h1 id="infectionControlTitle" class="section-title text-center">Infection Control Check List Details</h1>
+            <div id="infectionControlSubsections" class="form-grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-4"> 
+                <button class="subsection-button" onclick="toggleICSubSection('clinicAreaDetails', 'clinicArea')">Clinic Area</button>
+                <button class="subsection-button" onclick="toggleICSubSection('sterilizationRoomDetails', 'sterilizationRoom')">Sterilization Room</button>
+                <button class="subsection-button" onclick="toggleICSubSection('disinfectionDetails', 'disinfection')">Disinfection</button>
+                <button class="subsection-button" onclick="toggleICSubSection('wasteDisposalDetails', 'wasteDisposal')">Waste Disposal</button>
+            </div>
+            <div id="clinicAreaDetails" class="detail-view-grid ic-subsection-container hidden"></div>
+            <div id="sterilizationRoomDetails" class="detail-view-grid ic-subsection-container hidden"></div>
+            <div id="disinfectionDetails" class="detail-view-grid ic-subsection-container hidden"></div>
+            <div id="wasteDisposalDetails" class="detail-view-grid ic-subsection-container hidden"></div>
+            <div id="infectionControlGeneralNotes" class="detail-view-item col-span-full mt-4"></div>
+            <div class="button-group">
+                <button type="button" class="action-button back-button" onclick="hideDetailSectionAndSubsections('infectionControlSection', 'clinicProfileSection')">العودة لملف العيادة</button>
+            </div>
+        </div>
+
+        <div id="dentalLabSection" class="card hidden detail-section-card">
+            <h1 id="dentalLabTitle" class="section-title text-center">Dental Lab Details</h1>
+            <div id="dentalLabContent" class="detail-view-grid"></div>
+             <div class="button-group">
+                <button type="button" class="action-button edit-button" onclick="prepareEditForDetailSubSection('dentalLab', null)">تعديل هذا القسم</button>
+                <button type="button" class="action-button back-button" onclick="hideDetailSectionAndSubsections('dentalLabSection', 'clinicProfileSection')">العودة لملف العيادة</button>
+            </div>
+        </div>
+
+        <div id="xrayRoomSection" class="card hidden detail-section-card">
+            <h1 id="xrayRoomTitle" class="section-title text-center">X-Ray Room Details</h1>
+            <div id="xrayRoomContent" class="detail-view-grid"></div>
+            <div class="button-group">
+                <button type="button" class="action-button edit-button" onclick="prepareEditForDetailSubSection('xrayRoom', null)">تعديل هذا القسم</button>
+                <button type="button" class="action-button back-button" onclick="hideDetailSectionAndSubsections('xrayRoomSection', 'clinicProfileSection')">العودة لملف العيادة</button>
+            </div>
+        </div>
+
+        <div id="implantsSection" class="card hidden detail-section-card">
+            <h1 id="implantsTitle" class="section-title text-center">Implants Details</h1>
+            <div id="implantsContent" class="detail-view-grid"></div>
+            <div class="button-group">
+                <button type="button" class="action-button edit-button" onclick="prepareEditForDetailSubSection('implants', null)">تعديل هذا القسم</button>
+                <button type="button" class="action-button back-button" onclick="hideDetailSectionAndSubsections('implantsSection', 'clinicProfileSection')">العودة لملف العيادة</button>
+            </div>
+        </div>
+
+        <div id="allNotesSection" class="card hidden detail-section-card">
+            <h1 id="allNotesTitle" class="section-title text-center">الملاحظات المجمعة</h1>
+            <div id="allNotesContent" class="all-notes-grid"></div>
+            <div class="button-group">
+                <button type="button" class="action-button back-button" onclick="hideDetailSectionAndSubsections('allNotesSection', 'clinicProfileSection')">العودة لملف العيادة</button>
+            </div>
+        </div>
+       
+        <div id="detailEditFormSection" class="card hidden">
+            <h1 id="detailEditFormTitle" class="section-title text-center">تعديل تفاصيل القسم</h1>
+            <form id="detailEditForm" class="form-grid"></form>
+            <div class="button-group">
+                <button type="button" id="saveDetailChangesButton" class="action-button save-button">حفظ تعديلات القسم</button>
+                <button type="button" id="cancelDetailEditButton" class="action-button cancel-button">إلغاء</button>
+            </div>
+            <div id="detailFormMessage" class="mt-4 text-center"></div>
+        </div>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+
+            // --- Credentials & Initial Data ---
+            const adminCredentials = { username: "admin", password: "adminpassword" };
+            const doctorCredentials = { username: "doctor", password: "doctorpassword" };
+
+            let clinics = [
+                { 
+                    id: "clinic1", 
+                    name: "عيادة الأمل",
+                    address: "شارع فلسطين، بناية الزهور، الطابق الأول",
+                    phone: "0123456789",
+                    classification: "عيادة أسنان عامة", 
+                    licenseHolder: "شركة الأمل الطبية",
+                    staffInformation: { 
+                        doctorsCount: 2, visitingDoctorsCount: 1, nursingStaffCount: 2, techniciansCount: 1,
+                        doctorsTable: [ 
+                            { name: "د. أحمد علي", specialization: "تقويم أسنان", licenseNumber: "L123A", licenseIssueDate: "2020-01-15", licenseExpiryDate: "2025-12-31" },
+                            { name: "د. سارة محمد", specialization: "جراحة الفم", licenseNumber: "L456B", licenseIssueDate: "2021-06-01", licenseExpiryDate: "2026-06-30" },
+                            ...Array(8).fill({ name: "", specialization: "", licenseNumber: "", licenseIssueDate: "", licenseExpiryDate: "" }) 
+                        ],
+                        visitingDoctorsTable: [ 
+                            { name: "د. زائر خالد", specialization: "أسنان أطفال", licenseNumber: "V789C", licenseIssueDate: "2022-08-01", licenseExpiryDate: "2025-08-15" },
+                            ...Array(2).fill({ name: "", specialization: "", licenseNumber: "", licenseIssueDate: "", licenseExpiryDate: "" }) 
+                        ],
+                        nursingStaffTable: [ 
+                            { name: "ممرضة ليلى", specialization: "تمريض أسنان", licenseNumber: "N111D", licenseIssueDate: "2020-10-01", licenseExpiryDate: "2025-10-10" },
+                            { name: "ممرض عمر", specialization: "مساعد طبيب أسنان", licenseNumber: "N222E", licenseIssueDate: "2023-01-10", licenseExpiryDate: "2026-01-20" },
+                            ...Array(2).fill({ name: "", specialization: "", licenseNumber: "", licenseIssueDate: "", licenseExpiryDate: "" }) 
+                        ],
+                        techniciansTable: [ 
+                            { name: "فني عبدالله", specialization: "فني مختبر أسنان", licenseNumber: "T333F", licenseIssueDate: "2022-11-01", licenseExpiryDate: "2025-11-05" },
+                            ...Array(2).fill({ name: "", specialization: "", licenseNumber: "", licenseIssueDate: "", licenseExpiryDate: "" }) 
+                        ],
+                        staffNotes: "جميع التراخيص سارية ومحدثة. الفريق متعاون."
+                    },
+                    infectionControl: {
+                        clinicArea: { 
+                            environmentHygiene: "Good", 
+                            handWashing_washingFacilities: true, handWashing_dryingFacilities: true, handWashing_disinfectantHandRub: true,
+                            protectiveBarriers_sterileGloves: true, protectiveBarriers_nonSterileGloves: true, protectiveBarriers_masks: true, protectiveBarriers_coatOrGown: true, protectiveBarriers_glassesOrFaceShield: true,
+                            disposable_hve: true, disposable_salivaEjectors: true, disposable_disposableCovers: true, disposable_cups: true, disposable_bib: true, disposable_mirrors: false, disposable_impTrays: false, disposable_airWaterNozzles: true,
+                            notes: "ملاحظات خاصة بمنطقة العيادة: كل شيء على ما يرام."
+                        },
+                        sterilizationRoom: {
+                            roomConfiguration: "1 Room", 
+                            cleaning_manualWash: true, cleaning_ultrasonicMachine: true, cleaning_washerDisinfector: false,
+                            drying_lintFreeTowels: true, drying_dryer: false,
+                            autoclavesNumber: "2", 
+                            tests_biologicalTest: true, tests_bdTest: true, tests_leakTest: true, tests_maintenanceReport: true,
+                            notes: "ملاحظات غرفة التعقيم: جهاز الأوتوكلاف الثاني يحتاج صيانة قريبة."
+                        },
+                        disinfection: {
+                            surfaceDisinfection: true,
+                            impressionDisinfection: true,
+                            disinfectionContainer: true,
+                            disposableBags: true,
+                            notes: "ملاحظات قسم التطهير: المواد المستخدمة ذات جودة عالية."
+                        },
+                        wasteDisposal: {
+                            infectiousWasteNonSharp: true, 
+                            infectiousWasteSharp: true,    
+                            nonInfectiousWaste: true, 
+                            notes: "ملاحظات التخلص من النفايات: يتم اتباع الإجراءات بشكل صحيح."    
+                        },
+                        notes: "إجراءات مكافحة العدوى متبعة بشكل جيد." 
+                    },
+                    dentalLab: { 
+                        type: "Main Dental Lab", 
+                        environmentHygieneLab: "Good",
+                        surfaceDisinfectionLab: true,
+                        impressionLab: true,
+                        appliancesLab: true,
+                        disinfectionContainerLab: true,
+                        disposableBagsLab: true,
+                        notes: "المختبر مجهز بشكل جيد." 
+                    },
+                    xrayRoom: { 
+                        environmentHygieneXray: "Good",
+                        protectiveBarriersXray: true,
+                        surfacesDisinfectionXray: true,
+                        glovesXray: true,
+                        trashBasketXray: true,
+                        leadApronXray: true,
+                        xrayTypes: {
+                            paFixed: true, paMobile: false, opg: true, cephalometric: false, cbct: false, rpdLicense: "Available" 
+                        },
+                        notes: "غرفة الأشعة مطابقة للمواصفات." 
+                    },
+                    implants: {
+                        performsImplants: true,
+                        implantWasherAvailable: true,
+                        implantDoctors: [
+                            { name: "د. أحمد علي", specialization: "جراحة وزراعة", implantType: "Straumann", implantLicense: "نعم" },
+                            { name: "د. سارة محمد", specialization: "جراحة الفم", implantType: "Nobel", implantLicense: "نعم" },
+                            ...Array(4).fill({ name: "", specialization: "", implantType: "", implantLicense: "" }) 
+                        ],
+                        notes: "قسم زراعة الأسنان مجهز بشكل جيد."
+                    }
+                }
+            ];
+
+            // --- DOM Elements ---
+            const allSectionIds = [
+                'loginSection', 'dashboardSection', 'clinicProfileSection', 'profileSection',
+                'editClinicFormSection', 'addClinicFormSection', 
+                'staffInformationSection', 'infectionControlSection', 'dentalLabSection', 'xrayRoomSection',
+                'implantsSection', 'allNotesSection', 'detailEditFormSection'
+            ];
+            
+            const loginForm = document.getElementById('loginForm');
+            const messageDiv = document.getElementById('message');
+            const clinicListDiv = document.getElementById('clinicList');
+            const logoutButton = document.getElementById('logoutButton'); 
+            const dashboardTitle = document.getElementById('dashboardTitle'); 
+            const showAddClinicFormButton = document.getElementById('showAddClinicFormButton'); 
+            const clinicProfileSection = document.getElementById('clinicProfileSection'); 
+            const clinicProfileTitle = document.getElementById('clinicProfileTitle');
+            const clinicProfileContent = document.getElementById('clinicProfileContent');
+            const backToListButton = document.getElementById('backToListButton');
+            const editClinicButton = document.getElementById('editClinicButton'); 
+            const editClinicFormSection = document.getElementById('editClinicFormSection'); 
+            const editClinicFormTitle = document.getElementById('editClinicFormTitle');
+            const editClinicFormEl = document.getElementById('editClinicForm');
+            const saveChangesButton = document.getElementById('saveChangesButton');
+            const cancelEditButton = document.getElementById('cancelEditButton');
+            const editFormMessage = document.getElementById('editFormMessage');
+            const addClinicFormSection = document.getElementById('addClinicFormSection'); 
+            const addClinicFormEl = document.getElementById('addClinicForm');
+            const saveNewClinicButton = document.getElementById('saveNewClinicButton');
+            const cancelAddClinicButton = document.getElementById('cancelAddClinicButton');
+            const addFormMessage = document.getElementById('addFormMessage');
+            const staffInformationSection = document.getElementById('staffInformationSection');
+            const staffInformationContent = document.getElementById('staffInformationContent');
+            const infectionControlSection = document.getElementById('infectionControlSection');
+            const clinicAreaDetailsDiv = document.getElementById('clinicAreaDetails');
+            const sterilizationRoomDetailsDiv = document.getElementById('sterilizationRoomDetails');
+            const disinfectionDetailsDiv = document.getElementById('disinfectionDetails');
+            const wasteDisposalDetailsDiv = document.getElementById('wasteDisposalDetails');
+            const infectionControlGeneralNotesDiv = document.getElementById('infectionControlGeneralNotes');
+            const dentalLabSection = document.getElementById('dentalLabSection');
+            const dentalLabContent = document.getElementById('dentalLabContent');
+            const xrayRoomSection = document.getElementById('xrayRoomSection');
+            const xrayRoomContent = document.getElementById('xrayRoomContent');
+            const implantsSection = document.getElementById('implantsSection');
+            const implantsContent = document.getElementById('implantsContent');
+            // const showImplantsButton = document.getElementById('showImplantsButton'); // Already in detailSectionButtons
+            const allNotesSection = document.getElementById('allNotesSection');
+            const allNotesContent = document.getElementById('allNotesContent');
+            // const showAllNotesButton = document.getElementById('showAllNotesButton'); // Already in detailSectionButtons
+            const detailEditFormSection = document.getElementById('detailEditFormSection'); 
+            const detailEditFormTitle = document.getElementById('detailEditFormTitle');
+            const detailEditFormEl = document.getElementById('detailEditForm');
+            const saveDetailChangesButton = document.getElementById('saveDetailChangesButton');
+            const cancelDetailEditButton = document.getElementById('cancelDetailEditButton');
+            const detailFormMessage = document.getElementById('detailFormMessage');
+            const profileSection = document.getElementById('profileSection');
+            const backToDashboardFromProfileButton = document.getElementById('backToDashboardFromProfileButton');
+
+            // FAB Elements
+            const fabContainer = document.getElementById('fab-container');
+            const mainFab = document.getElementById('main-fab');
+            const fabIconMenu = document.getElementById('fab-icon-menu');
+            const fabIconClose = document.getElementById('fab-icon-close');
+            const fabOptionProfile = document.getElementById('fab-option-profile');
+            const fabOptionAddClinic = document.getElementById('fab-option-add-clinic');
+            const fabOptionLogout = document.getElementById('fab-option-logout');
+
+
+            let currentUserType = null; 
+            let currentClinicId = null; 
+            let currentMainDetailSectionKey = null; 
+            let currentICSubSectionToEdit = null; 
+
+            // --- Utility Functions ---
+            function showSection(sectionIdToShow) {
+                allSectionIds.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) { 
+                        el.classList.toggle('hidden', el.id !== sectionIdToShow);
+                    } else {
+                        console.warn(`Element with ID '${id}' not found during showSection.`);
+                    }
+                });
+                // FAB visibility based on section
+                if (fabContainer) {
+                    if (sectionIdToShow === 'loginSection' || !currentUserType) {
+                        fabContainer.classList.add('hidden');
+                        if (fabContainer.classList.contains('fab-active')) { // Close FAB menu if open
+                            closeFabMenu();
+                        }
+                    } else {
+                        fabContainer.classList.remove('hidden');
+                    }
+                }
+            }
+           
+            function displayUIMessage(element, text, type) {
+                if(element) {
+                    element.textContent = text;
+                    element.className = 'mt-4 text-center'; 
+                    if (type === "success") element.classList.add('message-success');
+                    else if (type === "error") element.classList.add('message-error');
+                } else {
+                     console.warn("Attempted to display message on a null element.");
+                }
+            }
+
+            function getSectionArabicName(sectionKey) {
+                const names = {
+                    staffInformation: 'معلومات الكادر',
+                    infectionControl: 'مكافحة العدوى',
+                    dentalLab: 'مختبر الأسنان',
+                    xrayRoom: 'غرفة الأشعة',
+                    implants: 'زراعة الأسنان',
+                    profileSection: 'الملف الشخصي'
+                };
+                return names[sectionKey] || 'القسم';
+            }
+
+            function getICSubSectionArabicName(subKey) {
+                const names = {
+                    clinicArea: 'منطقة العيادة',
+                    sterilizationRoom: 'غرفة التعقيم',
+                    disinfection: 'التطهير',
+                    wasteDisposal: 'التخلص من النفايات'
+                };
+                return names[subKey] || 'القسم الفرعي';
+            }
+            
+            function populateValue(value, trueText = "متوفر", falseText = "غير متوفر", notApplicableText = "لا ينطبق") {
+                if (value === true) return trueText;
+                if (value === false) return falseText;
+                return value || notApplicableText;
+            }
+
+            // --- FAB Menu Logic ---
+            function openFabMenu() {
+                if (fabContainer) fabContainer.classList.add('fab-active');
+            }
+
+            function closeFabMenu() {
+                if (fabContainer) fabContainer.classList.remove('fab-active');
+            }
+
+            function toggleFabMenu() {
+                if (fabContainer) fabContainer.classList.toggle('fab-active');
+            }
+
+            if (mainFab) {
+                mainFab.addEventListener('click', function(event) {
+                    event.stopPropagation(); // Prevent document click listener from closing it immediately
+                    toggleFabMenu();
+                });
+            }
+
+            if (fabOptionProfile) {
+                fabOptionProfile.addEventListener('click', function() {
+                    showSection('profileSection');
+                    closeFabMenu();
+                });
+            }
+            if (fabOptionAddClinic) {
+                fabOptionAddClinic.addEventListener('click', function() {
+                    if(showAddClinicFormButton) showAddClinicFormButton.click(); // Trigger existing logic
+                    closeFabMenu();
+                });
+            }
+            if (fabOptionLogout) {
+                fabOptionLogout.addEventListener('click', function() {
+                    if(logoutButton) logoutButton.click(); // Trigger existing logic
+                    closeFabMenu(); 
+                });
+            }
+            
+            // Close FAB menu if clicking outside
+            document.addEventListener('click', function(event) {
+                if (fabContainer && fabContainer.classList.contains('fab-active')) {
+                    if (!fabContainer.contains(event.target)) {
+                        closeFabMenu();
+                    }
+                }
+            });
+
+
+            // --- Login Logic ---
+            if (loginForm) {
+                loginForm.addEventListener('submit', function(event) {
+                    event.preventDefault(); 
+                    const userTypeInput = document.getElementById('userType').value;
+                    const username = document.getElementById('username').value;
+                    const password = document.getElementById('password').value;
+                    if(messageDiv) { messageDiv.textContent = ''; messageDiv.className = 'mt-4 text-center'; }
+
+                    let loggedIn = false;
+                    if (userTypeInput === "admin") {
+                        if (username === adminCredentials.username && password === adminCredentials.password) {
+                            loggedIn = true; currentUserType = "admin"; 
+                        } else { displayUIMessage(messageDiv, "بيانات اعتماد المدير غير صحيحة.", "error"); }
+                    } else if (userTypeInput === "doctor") {
+                        if (username === doctorCredentials.username && password === doctorCredentials.password) {
+                            loggedIn = true; currentUserType = "doctor"; 
+                        } else { displayUIMessage(messageDiv, "بيانات اعتماد الطبيب غير صحيحة.", "error"); }
+                    } else { displayUIMessage(messageDiv, "الرجاء اختيار نوع حساب صالح.", "error"); }
+
+                    if (loggedIn) {
+                        showSection('dashboardSection');
+                        populateClinicList();
+                        if (fabContainer) fabContainer.classList.remove('hidden'); // Show FAB
+                    }
+                });
+            }
+
+            // --- Logout Logic ---
+            if(logoutButton) {
+                logoutButton.addEventListener('click', function() { 
+                    showSection('loginSection'); // This will also hide FAB via showSection logic
+                    const usernameInput = document.getElementById('username');
+                    const passwordInput = document.getElementById('password');
+                    if(usernameInput) usernameInput.value = ''; 
+                    if(passwordInput) passwordInput.value = ''; 
+                    if(messageDiv) { messageDiv.textContent = ''; messageDiv.className = 'mt-4 text-center';}
+                    currentUserType = null; currentClinicId = null;
+                    // FAB is hidden by showSection('loginSection')
+                });
+            }
+            
+            // --- Profile Section Back Button ---
+            if (backToDashboardFromProfileButton) {
+                backToDashboardFromProfileButton.addEventListener('click', () => {
+                    showSection('dashboardSection');
+                });
+            }
+
+
+            // --- Dashboard & Clinic List ---
+            function populateClinicList() {
+                if(!clinicListDiv || !dashboardTitle) {
+                    console.error("Clinic list or dashboard title element not found.");
+                    return;
+                }
+                clinicListDiv.innerHTML = ''; 
+                dashboardTitle.textContent = clinics.length === 0 ? 'لا توجد عيادات حالياً. قم بإضافة عيادة جديدة.' : 'قائمة العيادات للتفتيش:';
+               
+                const ul = document.createElement('ul');
+                ul.className = 'space-y-2'; 
+                clinics.forEach(clinic => {
+                    const button = document.createElement('button');
+                    button.textContent = clinic.name;
+                    button.classList.add('action-button', 'clinic-button'); 
+                    button.dataset.clinicId = clinic.id; 
+                    button.addEventListener('click', () => showClinicProfilePage(clinic.id)); 
+                    const li = document.createElement('li'); li.appendChild(button);
+                    ul.appendChild(li);
+                });
+                clinicListDiv.appendChild(ul);
+            }
+
+            // --- Clinic Profile Page ---
+            function showClinicProfilePage(clinicId) { 
+                const clinic = clinics.find(c => c.id === clinicId);
+                if (!clinic) { console.error("Clinic not found:", clinicId); return; }
+                currentClinicId = clinicId; 
+
+                showSection('clinicProfileSection'); 
+
+                if(clinicProfileTitle) clinicProfileTitle.textContent = `ملف: ${clinic.name}`;
+                if(clinicProfileContent) {
+                    clinicProfileContent.innerHTML = `
+                        <div class="profile-grid">
+                            <div class="profile-item">
+                                <h3 class="font-semibold text-lg mb-2">معلومات أساسية</h3>
+                                <p><strong>الاسم:</strong> ${clinic.name}</p>
+                                <p><strong>العنوان:</strong> ${clinic.address || 'غير متوفر'}</p>
+                                <p><strong>الهاتف:</strong> ${clinic.phone || 'غير متوفر'}</p>
+                                <p><strong>التصنيف:</strong> ${clinic.classification || 'غير متوفر'}</p>
+                                <p><strong>صاحب الترخيص:</strong> ${clinic.licenseHolder || 'غير متوفر'}</p>
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+            
+            if(backToListButton) {
+                backToListButton.addEventListener('click', function() {
+                    showSection('dashboardSection');
+                    currentClinicId = null;
+                });
+            }
+
+            // --- Show Detail Sections ---
+            const detailSectionButtons = [
+                { id: 'showStaffInformationButton', sectionId: 'staffInformationSection', dataKey: 'staffInformation' },
+                { id: 'showInfectionControlButton', sectionId: 'infectionControlSection', dataKey: 'infectionControl' },
+                { id: 'showDentalLabButton', sectionId: 'dentalLabSection', dataKey: 'dentalLab' },
+                { id: 'showXrayRoomButton', sectionId: 'xrayRoomSection', dataKey: 'xrayRoom' },
+                { id: 'showImplantsButton', sectionId: 'implantsSection', dataKey: 'implants' },
+                { id: 'showAllNotesButton', sectionId: 'allNotesSection', dataKey: 'allNotesSection' }
+            ];
+
+            detailSectionButtons.forEach(btnConfig => {
+                const btnElement = document.getElementById(btnConfig.id);
+                if (btnElement) {
+                    btnElement.addEventListener('click', () => showDetailSection(btnConfig.sectionId, btnConfig.dataKey));
+                } else {
+                    console.warn(`Button with ID '${btnConfig.id}' not found.`);
+                }
+            });
+
+            function showDetailSection(sectionElementId, sectionDataKey) {
+                if (!currentClinicId) { console.warn("No current clinic selected."); return; }
+                const clinic = clinics.find(c => c.id === currentClinicId);
+                if (!clinic) { console.error("Current clinic data not found."); return; }
+
+                // Hide clinic profile and all other detail cards first
+                if(clinicProfileSection) clinicProfileSection.classList.add('hidden'); 
+                const allDetailCardIds = ['staffInformationSection', 'infectionControlSection', 'dentalLabSection', 'xrayRoomSection', 'implantsSection', 'allNotesSection'];
+                allDetailCardIds.forEach(cardId => {
+                    const card = document.getElementById(cardId);
+                    if (card) card.classList.add('hidden');
+                });
+                
+                // Show the target section
+                const sectionToShow = document.getElementById(sectionElementId);
+                if (sectionToShow) { 
+                    sectionToShow.classList.remove('hidden');
+                } else {
+                    console.error(`Section element with ID '${sectionElementId}' not found.`);
+                    return;
+                }
+                currentMainDetailSectionKey = sectionDataKey; 
+
+                // Populate content based on sectionDataKey
+                if (sectionDataKey === 'staffInformation' && staffInformationContent) populateStaffInformationDetails(clinic.staffInformation, staffInformationContent);
+                else if (sectionDataKey === 'infectionControl') populateInfectionControlDetails(clinic.infectionControl); 
+                else if (sectionDataKey === 'dentalLab' && dentalLabContent) populateDentalLabDetails(clinic.dentalLab, dentalLabContent);
+                else if (sectionDataKey === 'xrayRoom' && xrayRoomContent) populateXrayRoomDetails(clinic.xrayRoom, xrayRoomContent);
+                else if (sectionDataKey === 'implants' && implantsContent) populateImplantsDetails(clinic.implants, implantsContent);
+                else if (sectionDataKey === 'allNotesSection' && allNotesContent) populateAllNotesContent(clinic, allNotesContent);
+            }
+           
+            window.hideDetailSectionAndSubsections = function(sectionToHideId, sectionToShowIdIfProfile) { 
+                const sectionToHide = document.getElementById(sectionToHideId);
+                if (sectionToHide) sectionToHide.classList.add('hidden');
+               
+                // Also hide all IC subsections if they were open
+                if(clinicAreaDetailsDiv) clinicAreaDetailsDiv.classList.add('hidden');
+                if(sterilizationRoomDetailsDiv) sterilizationRoomDetailsDiv.classList.add('hidden');
+                if(disinfectionDetailsDiv) disinfectionDetailsDiv.classList.add('hidden');
+                if(wasteDisposalDetailsDiv) wasteDisposalDetailsDiv.classList.add('hidden');
+               
+                if (sectionToShowIdIfProfile === 'clinicProfileSection' && currentClinicId) { 
+                    showClinicProfilePage(currentClinicId); 
+                } else if (sectionToShowIdIfProfile) {
+                     showSection(sectionToShowIdIfProfile);
+                } else {
+                    showSection('clinicProfileSection'); // Default to clinic profile if no specific target
+                    if(currentClinicId) showClinicProfilePage(currentClinicId);
+                }
+                currentMainDetailSectionKey = null; 
+                currentICSubSectionToEdit = null;
+            }
+           
+            // --- Infection Control Subsections ---
+            window.toggleICSubSection = function(subSectionDivId, subSectionKey) {
+                const clinic = clinics.find(c => c.id === currentClinicId);
+                if (!clinic || !clinic.infectionControl) { console.warn("Clinic or IC data not found for toggle."); return; }
+
+                const subSectionDiv = document.getElementById(subSectionDivId);
+                const allICSubSectionDivs = [clinicAreaDetailsDiv, sterilizationRoomDetailsDiv, disinfectionDetailsDiv, wasteDisposalDetailsDiv];
+                if(!subSectionDiv) { console.error("IC SubSection Div not found:", subSectionDivId); return; }
+                
+                const isCurrentlyHidden = subSectionDiv.classList.contains('hidden');
+
+                // Hide all subsections first
+                allICSubSectionDivs.forEach(div => {
+                    if(div) div.classList.add('hidden');
+                }); 
+
+                if (isCurrentlyHidden) { // If it was hidden, now show it and populate
+                    subSectionDiv.classList.remove('hidden');
+                    let contentHtml = '';
+                    let dataObject = clinic.infectionControl[subSectionKey];
+                    if (!dataObject) { // Ensure subsection data exists
+                        clinic.infectionControl[subSectionKey] = {notes:''}; // Initialize if missing
+                        dataObject = clinic.infectionControl[subSectionKey];
+                    }
+
+                    if (subSectionKey === 'clinicArea') contentHtml = populateClinicAreaDetails(dataObject);
+                    else if (subSectionKey === 'sterilizationRoom') contentHtml = populateSterilizationRoomDetails(dataObject);
+                    else if (subSectionKey === 'disinfection') contentHtml = populateDisinfectionDetails(dataObject);
+                    else if (subSectionKey === 'wasteDisposal') contentHtml = populateWasteDisposalDetails(dataObject);
+                    
+                    subSectionDiv.innerHTML = contentHtml; // Populate the div
+                    
+                    // Add edit button after content
+                    const editButtonHtml = `<div class="button-group mt-3"><button class="action-button edit-button small-edit-button" onclick="prepareEditForDetailSubSection('infectionControl', '${subSectionKey}')">تعديل ${getICSubSectionArabicName(subSectionKey)}</button></div>`;
+                    subSectionDiv.innerHTML += editButtonHtml;
+                }
+                // If it was visible, it's now hidden by the loop above, so effectively toggled off.
+            }
+
+            // --- Populate Detail View Functions ---
+            // Staff Information
+            function populateStaffInformationDetails(data, element) {
+                if(!element || !data) { console.warn("Staff info element or data missing."); return; }
+                let html = `<div class="detail-view-item"><p><strong>عدد الأطباء:</strong> ${data.doctorsCount || 0}</p></div>`;
+                html += `<div class="detail-view-item"><p><strong>عدد الأطباء الزائرين:</strong> ${data.visitingDoctorsCount || 0}</p></div>`;
+                html += `<div class="detail-view-item"><p><strong>عدد هيئة التمريض:</strong> ${data.nursingStaffCount || 0}</p></div>`;
+                html += `<div class="detail-view-item"><p><strong>عدد الفنيين:</strong> ${data.techniciansCount || 0}</p></div>`;
+
+                const staffTables = [
+                    { title: "الأطباء", data: data.doctorsTable || [] },
+                    { title: "الأطباء الزائرون", data: data.visitingDoctorsTable || [] },
+                    { title: "هيئة التمريض", data: data.nursingStaffTable || [], colHeader: "التخصص/التصنيف" },
+                    { title: "الفنيون", data: data.techniciansTable || [] }
+                ];
+
+                staffTables.forEach(tableInfo => {
+                    html += `<h4 class="subsection-title col-span-full mt-4">${tableInfo.title}</h4>`;
+                    html += `<div class="table-container col-span-full"><table class="min-w-full"><thead><tr><th>الاسم</th><th>${tableInfo.colHeader || 'التخصص'}</th><th>رقم الترخيص</th><th>تاريخ الترخيص</th><th>انتهاء الترخيص</th></tr></thead><tbody>`;
+                    const filteredData = tableInfo.data.filter(item => item.name || item.specialization || item.licenseNumber);
+                    if (filteredData.length > 0) {
+                        filteredData.forEach(item => {
+                            html += `<tr><td>${item.name || ''}</td><td>${item.specialization || ''}</td><td>${item.licenseNumber || ''}</td><td>${item.licenseIssueDate || ''}</td><td>${item.licenseExpiryDate || ''}</td></tr>`;
+                        });
+                    } else {
+                        html += `<tr><td colspan="5" class="text-center text-gray-500 py-2">لا توجد بيانات مسجلة</td></tr>`;
+                    }
+                    html += `</tbody></table></div>`;
+                });
+
+                html += `<div class="detail-view-item col-span-full mt-4"><p><strong>ملاحظات العاملين:</strong> ${data.staffNotes || 'لا يوجد'}</p></div>`;
+                element.innerHTML = html;
+            }
+            
+            // Infection Control Subsections - MODIFIED TO RETURN HTML
+            function populateClinicAreaDetails(ca) { 
+                if(!ca) return '<p class="col-span-full text-gray-500">لا توجد بيانات لعرضها.</p>';
+                let html = `<h3 class="subsection-title col-span-full">منطقة العيادة</h3>`;
+                html += `<div class="detail-view-item"><p><strong>نظافة البيئة:</strong> ${populateValue(ca.environmentHygiene, "جيدة", "غير جيدة")}</p></div>`;
+                html += `<div class="detail-view-item"><p><strong>مرافق غسيل الأيدي:</strong> ${populateValue(ca.handWashing_washingFacilities)}</p></div>`;
+                html += `<div class="detail-view-item"><p><strong>مرافق تجفيف الأيدي:</strong> ${populateValue(ca.handWashing_dryingFacilities)}</p></div>`;
+                html += `<div class="detail-view-item"><p><strong>معقم الأيدي:</strong> ${populateValue(ca.handWashing_disinfectantHandRub)}</p></div>`;
+                html += `<h4 class="subsection-title col-span-full mt-4">الحواجز الواقية</h4>`;
+                html += `<div class="detail-view-item"><p><strong>قفازات معقمة:</strong> ${populateValue(ca.protectiveBarriers_sterileGloves)}</p></div>`;
+                html += `<div class="detail-view-item"><p><strong>قفازات غير معقمة:</strong> ${populateValue(ca.protectiveBarriers_nonSterileGloves)}</p></div>`;
+                html += `<div class="detail-view-item"><p><strong>كمامات:</strong> ${populateValue(ca.protectiveBarriers_masks)}</p></div>`;
+                html += `<div class="detail-view-item"><p><strong>معطف أو جاون:</strong> ${populateValue(ca.protectiveBarriers_coatOrGown)}</p></div>`;
+                html += `<div class="detail-view-item"><p><strong>نظارات أو واقي وجه:</strong> ${populateValue(ca.protectiveBarriers_glassesOrFaceShield)}</p></div>`;
+                html += `<h4 class="subsection-title col-span-full mt-4">استخدام الأدوات ذات الاستخدام الواحد</h4>`;
+                html += `<div class="detail-view-item"><p><strong>H.V.E:</strong> ${populateValue(ca.disposable_hve)}</p></div>`;
+                html += `<div class="detail-view-item"><p><strong>Saliva Ejectors:</strong> ${populateValue(ca.disposable_salivaEjectors)}</p></div>`;
+                html += `<div class="detail-view-item"><p><strong>أغطية للاستخدام الواحد:</strong> ${populateValue(ca.disposable_disposableCovers)}</p></div>`;
+                html += `<div class="detail-view-item"><p><strong>أكواب:</strong> ${populateValue(ca.disposable_cups)}</p></div>`;
+                html += `<div class="detail-view-item"><p><strong>Bib:</strong> ${populateValue(ca.disposable_bib)}</p></div>`;
+                html += `<div class="detail-view-item"><p><strong>مرايا للاستخدام الواحد:</strong> ${populateValue(ca.disposable_mirrors)}</p></div>`;
+                html += `<div class="detail-view-item"><p><strong>Imp. Trays للاستخدام الواحد:</strong> ${populateValue(ca.disposable_impTrays)}</p></div>`;
+                html += `<div class="detail-view-item"><p><strong>Air/Water Syringe Nozzles:</strong> ${populateValue(ca.disposable_airWaterNozzles)}</p></div>`;
+                html += `<div class="detail-view-item col-span-full"><p><strong>ملاحظات منطقة العيادة:</strong> ${ca.notes || 'لا يوجد'}</p></div>`;
+                return html;
+            }
+
+            function populateSterilizationRoomDetails(sr) { 
+                if(!sr) return '<p class="col-span-full text-gray-500">لا توجد بيانات لعرضها.</p>';
+                let html = `<h3 class="subsection-title col-span-full">غرفة التعقيم</h3>`;
+                html += `<div class="detail-view-item"><p><strong>تكوين الغرفة:</strong> ${populateValue(sr.roomConfiguration, sr.roomConfiguration, sr.roomConfiguration)}</p></div>`;
+                html += `<h4 class="subsection-title col-span-full mt-4">تنظيف الأدوات</h4>`;
+                html += `<div class="detail-view-item"><p><strong>غسيل يدوي:</strong> ${populateValue(sr.cleaning_manualWash)}</p></div>`;
+                html += `<div class="detail-view-item"><p><strong>جهاز الموجات فوق الصوتية:</strong> ${populateValue(sr.cleaning_ultrasonicMachine)}</p></div>`;
+                html += `<div class="detail-view-item"><p><strong>جهاز غسيل وتطهير:</strong> ${populateValue(sr.cleaning_washerDisinfector)}</p></div>`;
+                html += `<h4 class="subsection-title col-span-full mt-4">تجفيف الأدوات</h4>`;
+                html += `<div class="detail-view-item"><p><strong>مناشف خالية من الوبر:</strong> ${populateValue(sr.drying_lintFreeTowels)}</p></div>`;
+                html += `<div class="detail-view-item"><p><strong>مجفف:</strong> ${populateValue(sr.drying_dryer)}</p></div>`;
+                html += `<div class="detail-view-item mt-4"><p><strong>عدد أجهزة الأوتوكلاف:</strong> ${populateValue(sr.autoclavesNumber, sr.autoclavesNumber, sr.autoclavesNumber)}</p></div>`;
+                html += `<h4 class="subsection-title col-span-full mt-4">أنواع الاختبارات</h4>`;
+                html += `<div class="detail-view-item"><p><strong>اختبار بيولوجي:</strong> ${populateValue(sr.tests_biologicalTest)}</p></div>`;
+                html += `<div class="detail-view-item"><p><strong>B & D Test:</strong> ${populateValue(sr.tests_bdTest)}</p></div>`;
+                html += `<div class="detail-view-item"><p><strong>اختبار التسرب:</strong> ${populateValue(sr.tests_leakTest)}</p></div>`;
+                html += `<div class="detail-view-item"><p><strong>تقرير صيانة دوري للأوتوكلاف:</strong> ${populateValue(sr.tests_maintenanceReport)}</p></div>`;
+                html += `<div class="detail-view-item col-span-full"><p><strong>ملاحظات غرفة التعقيم:</strong> ${sr.notes || 'لا يوجد'}</p></div>`;
+                return html;
+            }
+
+            function populateDisinfectionDetails(disinfectionData) {
+                if(!disinfectionData) return '<p class="col-span-full text-gray-500">لا توجد بيانات لعرضها.</p>';
+                let html = `<h3 class="subsection-title col-span-full">التطهير</h3>`;
+                html += `<div class="detail-view-item"><p><strong>تطهير الأسطح:</strong> ${populateValue(disinfectionData.surfaceDisinfection)}</p></div>`;
+                html += `<div class="detail-view-item"><p><strong>تطهير الطبعات:</strong> ${populateValue(disinfectionData.impressionDisinfection)}</p></div>`;
+                html += `<div class="detail-view-item"><p><strong>وعاء التطهير:</strong> ${populateValue(disinfectionData.disinfectionContainer)}</p></div>`;
+                html += `<div class="detail-view-item"><p><strong>أكياس للاستخدام الواحد:</strong> ${populateValue(disinfectionData.disposableBags)}</p></div>`;
+                html += `<div class="detail-view-item col-span-full"><p><strong>ملاحظات التطهير:</strong> ${disinfectionData.notes || 'لا يوجد'}</p></div>`;
+                return html;
+            }
+
+            function populateWasteDisposalDetails(wasteData) {
+                if(!wasteData) return '<p class="col-span-full text-gray-500">لا توجد بيانات لعرضها.</p>';
+                let html = `<h3 class="subsection-title col-span-full">التخلص من النفايات</h3>`;
+                html += `<div class="detail-view-item"><p><strong>نفايات معدية (غير حادة - أكياس صفراء):</strong> ${populateValue(wasteData.infectiousWasteNonSharp)}</p></div>`;
+                html += `<div class="detail-view-item"><p><strong>نفايات معدية (حادة - وعاء الأدوات الحادة):</strong> ${populateValue(wasteData.infectiousWasteSharp)}</p></div>`;
+                html += `<div class="detail-view-item"><p><strong>نفايات غير معدية/غير خطرة (أكياس بلاستيكية مرمزة بالألوان):</strong> ${populateValue(wasteData.nonInfectiousWaste)}</p></div>`;
+                html += `<div class="detail-view-item col-span-full"><p><strong>ملاحظات التخلص من النفايات:</strong> ${wasteData.notes || 'لا يوجد'}</p></div>`;
+                return html;
+            }
+           
+            // Main Infection Control population (for general notes)
+            function populateInfectionControlDetails(data) { 
+                if(infectionControlGeneralNotesDiv && data) {
+                    infectionControlGeneralNotesDiv.innerHTML = `<p><strong>ملاحظات عامة لمكافحة العدوى:</strong> ${data.notes || 'لا يوجد'}</p>`;
+                } else if (infectionControlGeneralNotesDiv) {
+                    infectionControlGeneralNotesDiv.innerHTML = `<p><strong>ملاحظات عامة لمكافحة العدوى:</strong> لا يوجد</p>`;
+                }
+            }
+
+            // Other main detail sections
+            function populateDentalLabDetails(data, element) {
+                if(!element || !data) { console.warn("Dental lab element or data missing."); return; }
+                let html = `<h3 class="subsection-title col-span-full">مختبر الأسنان</h3>`;
+                html += `<div class="detail-view-item"><p><strong>النوع:</strong> ${populateValue(data.type, data.type, data.type)}</p></div>`;
+                html += `<div class="detail-view-item"><p><strong>نظافة البيئة:</strong> ${populateValue(data.environmentHygieneLab, "جيدة", "غير جيدة")}</p></div>`;
+                html += `<div class="detail-view-item"><p><strong>تطهير الأسطح:</strong> ${populateValue(data.surfaceDisinfectionLab)}</p></div>`;
+                html += `<div class="detail-view-item"><p><strong>الطبعات:</strong> ${populateValue(data.impressionLab)}</p></div>`;
+                html += `<div class="detail-view-item"><p><strong>الأجهزة:</strong> ${populateValue(data.appliancesLab)}</p></div>`;
+                html += `<div class="detail-view-item"><p><strong>وعاء التطهير:</strong> ${populateValue(data.disinfectionContainerLab)}</p></div>`;
+                html += `<div class="detail-view-item"><p><strong>أكياس للاستخدام الواحد:</strong> ${populateValue(data.disposableBagsLab)}</p></div>`;
+                html += `<div class="detail-view-item col-span-full"><p><strong>ملاحظات مختبر الأسنان:</strong> ${data.notes || 'لا يوجد'}</p></div>`;
+                element.innerHTML = html;
+            }
+
+            function populateXrayRoomDetails(data, element) {
+                if(!element || !data) { console.warn("X-ray room element or data missing."); return; }
+                const xt = data.xrayTypes || {};
+                let html = `<h3 class="subsection-title col-span-full">غرفة الأشعة</h3>`;
+                html += `<div class="detail-view-item"><p><strong>فحص نظافة البيئة:</strong> ${populateValue(data.environmentHygieneXray, "جيدة", "غير جيدة")}</p></div>`;
+                html += `<div class="detail-view-item"><p><strong>الحواجز الواقية:</strong> ${populateValue(data.protectiveBarriersXray)}</p></div>`;
+                html += `<div class="detail-view-item"><p><strong>تطهير الأسطح:</strong> ${populateValue(data.surfacesDisinfectionXray)}</p></div>`;
+                html += `<div class="detail-view-item"><p><strong>القفازات:</strong> ${populateValue(data.glovesXray)}</p></div>`;
+                html += `<div class="detail-view-item"><p><strong>سلة المهملات:</strong> ${populateValue(data.trashBasketXray)}</p></div>`;
+                html += `<div class="detail-view-item"><p><strong>مريول الرصاص:</strong> ${populateValue(data.leadApronXray)}</p></div>`;
+                html += `<h4 class="subsection-title col-span-full mt-4">أنواع الأشعة</h4>`;
+                html += `<div class="detail-view-item"><p><strong>P.A ثابت:</strong> ${populateValue(xt.paFixed)}</p></div>`;
+                html += `<div class="detail-view-item"><p><strong>P.A متنقل:</strong> ${populateValue(xt.paMobile)}</p></div>`;
+                html += `<div class="detail-view-item"><p><strong>O.P.G:</strong> ${populateValue(xt.opg)}</p></div>`;
+                html += `<div class="detail-view-item"><p><strong>Cephalometric:</strong> ${populateValue(xt.cephalometric)}</p></div>`;
+                html += `<div class="detail-view-item"><p><strong>CBCT:</strong> ${populateValue(xt.cbct)}</p></div>`;
+                html += `<div class="detail-view-item"><p><strong>ترخيص RPD:</strong> ${populateValue(xt.rpdLicense, xt.rpdLicense, xt.rpdLicense)}</p></div>`; 
+                html += `<div class="detail-view-item col-span-full"><p><strong>ملاحظات غرفة الأشعة:</strong> ${data.notes || 'لا يوجد'}</p></div>`;
+                element.innerHTML = html;
+            }
+
+            function populateImplantsDetails(data, element) {
+                if(!element || !data) { console.warn("Implants element or data missing."); return; }
+                let html = `<div class="detail-view-item col-span-full">
+                                <p><strong>المركز يقوم بعمل الزراعة:</strong> ${populateValue(data.performsImplants, "نعم", "لا")}</p>
+                                <p><strong>هل تتوفر غسالة لأدوات الزراعة:</strong> ${populateValue(data.implantWasherAvailable, "نعم", "لا")}</p>
+                            </div>`;
+                html += `<h4 class="subsection-title col-span-full mt-4">الأطباء الذين يقومون بالزراعة</h4>`;
+                html += `<div class="table-container col-span-full"><table class="min-w-full"><thead><tr>
+                            <th>الاسم</th><th>الاختصاص</th><th>نوع Implant</th><th>ترخيص الزراعة</th>
+                           </tr></thead><tbody>`;
+                const filteredDoctors = (data.implantDoctors || []).filter(doc => doc.name || doc.specialization || doc.implantType || doc.implantLicense);
+                if (filteredDoctors.length > 0) {
+                    filteredDoctors.forEach(doc => {
+                        html += `<tr>
+                                    <td>${doc.name || ''}</td>
+                                    <td>${doc.specialization || ''}</td>
+                                    <td>${doc.implantType || ''}</td>
+                                    <td>${doc.implantLicense || ''}</td>
+                                 </tr>`;
+                    });
+                } else {
+                    html += `<tr><td colspan="4" class="text-center text-gray-500 py-2">لا توجد بيانات أطباء مسجلة</td></tr>`;
+                }
+                html += `</tbody></table></div>`;
+                html += `<div class="detail-view-item col-span-full mt-4"><p><strong>ملاحظات زراعة الأسنان:</strong> ${data.notes || 'لا يوجد'}</p></div>`;
+                element.innerHTML = html;
+            }
+
+            function populateAllNotesContent(clinic, element) {
+                if(!element || !clinic) { console.warn("All notes element or clinic data missing."); return; }
+                let html = '';
+                const notesMap = {
+                    "ملاحظات العاملين:": clinic.staffInformation?.staffNotes,
+                    "ملاحظات مكافحة العدوى العامة:": clinic.infectionControl?.notes,
+                    "ملاحظات منطقة العيادة (مكافحة العدوى):": clinic.infectionControl?.clinicArea?.notes,
+                    "ملاحظات غرفة التعقيم (مكافحة العدوى):": clinic.infectionControl?.sterilizationRoom?.notes,
+                    "ملاحظات قسم التطهير (مكافحة العدوى):": clinic.infectionControl?.disinfection?.notes,
+                    "ملاحظات التخلص من النفايات (مكافحة العدوى):": clinic.infectionControl?.wasteDisposal?.notes,
+                    "ملاحظات مختبر الأسنان:": clinic.dentalLab?.notes,
+                    "ملاحظات غرفة الأشعة:": clinic.xrayRoom?.notes,
+                    "ملاحظات زراعة الأسنان:": clinic.implants?.notes
+                };
+
+                let hasNotes = false;
+                for (const label in notesMap) {
+                    const note = notesMap[label];
+                    if (note && note.trim() !== "") { 
+                        html += `<div class="all-notes-item col-span-full"><p><strong>${label}</strong> ${note}</p></div>`;
+                        hasNotes = true;
+                    }
+                }
+                if (!hasNotes) {
+                    html = `<div class="all-notes-item col-span-full"><p>لا توجد ملاحظات مسجلة في أي قسم.</p></div>`;
+                }
+                element.innerHTML = html;
+            }
+           
+            // --- Edit Basic Clinic Info ---
+            if(editClinicButton) {
+                editClinicButton.addEventListener('click', function() {
+                    if (!currentClinicId) return;
+                    const clinic = clinics.find(c => c.id === currentClinicId);
+                    if (!clinic) return;
+                    showSection('editClinicFormSection'); 
+                    if(editClinicFormTitle) editClinicFormTitle.textContent = `تعديل البيانات الأساسية لـ: ${clinic.name}`;
+                    if(editClinicFormEl) editClinicFormEl.innerHTML = generateClinicFormHTML(clinic, true); 
+                    if(editFormMessage) { editFormMessage.textContent = ''; editFormMessage.className = 'mt-4 text-center'; }
+                });
+            }
+           
+            function generateClinicFormHTML(clinic = {}, basicOnly = false) {
+                let html = `
+                    <div class="form-item"><label for="name" class="form-label">اسم العيادة:</label><input type="text" id="name" name="name" class="form-input" value="${clinic.name || ''}" required></div>
+                    <div class="form-item"><label for="address" class="form-label">العنوان:</label><input type="text" id="address" name="address" class="form-input" value="${clinic.address || ''}"></div>
+                    <div class="form-item"><label for="phone" class="form-label">الهاتف:</label><input type="tel" id="phone" name="phone" class="form-input" value="${clinic.phone || ''}"></div>
+                    <div class="form-item"><label for="classification" class="form-label">التصنيف:</label><select id="classification" name="classification" class="form-select">${['عيادة أسنان عامة', 'مركز أسنان تخصصي', 'عيادة أسنان في مستوصف', 'مختبر أسنان', 'عيادة أسنان متنقلة'].map(opt => `<option value="${opt}" ${clinic.classification === opt ? 'selected' : ''}>${opt}</option>`).join('')}</select></div>
+                    <div class="form-item"><label for="licenseHolder" class="form-label">صاحب الترخيص:</label><input type="text" id="licenseHolder" name="licenseHolder" class="form-input" value="${clinic.licenseHolder || ''}"></div>`;
+
+                if (basicOnly) return html; 
+
+                const staffData = clinic.staffInformation || { staffNotes: '', doctorsCount:0, visitingDoctorsCount:0, nursingStaffCount:0, techniciansCount:0 };
+                html += `<h3 class="col-span-full section-title mt-4">معلومات الكادر (أولية)</h3>`;
+                html += `<div class="form-item"><label for="staff_doctorsCount" class="form-label">عدد الأطباء:</label><input type="number" id="staff_doctorsCount" name="staffInformation_doctorsCount" class="form-input" value="${staffData.doctorsCount || 0}" min="0"></div>`;
+                html += `<div class="form-item"><label for="staff_visitingDoctorsCount" class="form-label">عدد الأطباء الزائرين:</label><input type="number" id="staff_visitingDoctorsCount" name="staffInformation_visitingDoctorsCount" class="form-input" value="${staffData.visitingDoctorsCount || 0}" min="0"></div>`;
+                html += `<div class="form-item"><label for="staff_nursingStaffCount" class="form-label">عدد هيئة التمريض:</label><input type="number" id="staff_nursingStaffCount" name="staffInformation_nursingStaffCount" class="form-input" value="${staffData.nursingStaffCount || 0}" min="0"></div>`;
+                html += `<div class="form-item"><label for="staff_techniciansCount" class="form-label">عدد الفنيين:</label><input type="number" id="staff_techniciansCount" name="staffInformation_techniciansCount" class="form-input" value="${staffData.techniciansCount || 0}" min="0"></div>`;
+                html += `<div class="form-item col-span-full"><label for="staffNotes" class="form-label">ملاحظات الكادر:</label><textarea id="staffNotes" name="staffInformation_staffNotes" class="form-textarea">${staffData.staffNotes || ''}</textarea></div>`;
+                html += `<p class="col-span-full text-sm text-gray-500 mt-1">سيتم ملء جداول تفاصيل العاملين في قسم "معلومات الكادر" لاحقاً.</p>`;
+
+                const icData = clinic.infectionControl || { notes: '', clinicArea: {notes:''}, sterilizationRoom: {notes:''}, disinfection: {notes:''}, wasteDisposal: {notes:''} };
+                const caData = icData.clinicArea || {notes:'', environmentHygiene: 'Good', handWashing_washingFacilities:true, handWashing_dryingFacilities:true, handWashing_disinfectantHandRub:true, protectiveBarriers_sterileGloves:true, protectiveBarriers_nonSterileGloves:true, protectiveBarriers_masks:true, protectiveBarriers_coatOrGown:true, protectiveBarriers_glassesOrFaceShield:true, disposable_hve:true, disposable_salivaEjectors:true, disposable_disposableCovers:true, disposable_cups:true, disposable_bib:true, disposable_mirrors:false, disposable_impTrays:false, disposable_airWaterNozzles:true}; 
+                const srData = icData.sterilizationRoom || {notes:'', roomConfiguration: '1 Room', cleaning_manualWash:true, cleaning_ultrasonicMachine:true, cleaning_washerDisinfector:false, drying_lintFreeTowels:true, drying_dryer:false, autoclavesNumber:"1", tests_biologicalTest:true, tests_bdTest:true, tests_leakTest:true, tests_maintenanceReport:true};
+                const diData = icData.disinfection || {notes:'', surfaceDisinfection:true, impressionDisinfection:true, disinfectionContainer:true, disposableBags:true};
+                const wdData = icData.wasteDisposal || {notes:'', infectiousWasteNonSharp:true, infectiousWasteSharp:true, nonInfectiousWaste:true};
+
+                html += `<h3 class="col-span-full section-title mt-4">مكافحة العدوى (أولية)</h3>`;
+                html += `<h4 class="col-span-full subsection-title">منطقة العيادة</h4>`;
+                html += createSelectFormItemHTML("ic_ca_envH", "infectionControl_clinicArea_environmentHygiene", "نظافة البيئة", caData.environmentHygiene, [{value:"Good", text:"جيدة"}, {value:"Not Good", text:"غير جيدة"}]);
+                html += createSelectFormItemHTML("ic_ca_washF", "infectionControl_clinicArea_handWashing_washingFacilities", "مرافق غسيل الأيدي", caData.handWashing_washingFacilities);
+                html += createSelectFormItemHTML("ic_ca_dryF", "infectionControl_clinicArea_handWashing_dryingFacilities", "مرافق تجفيف الأيدي", caData.handWashing_dryingFacilities);
+                html += createSelectFormItemHTML("ic_ca_rub", "infectionControl_clinicArea_handWashing_disinfectantHandRub", "معقم الأيدي", caData.handWashing_disinfectantHandRub);
+                html += createSelectFormItemHTML("ic_ca_sGloves", "infectionControl_clinicArea_protectiveBarriers_sterileGloves", "قفازات معقمة", caData.protectiveBarriers_sterileGloves);
+                html += createSelectFormItemHTML("ic_ca_nsGloves", "infectionControl_clinicArea_protectiveBarriers_nonSterileGloves", "قفازات غير معقمة", caData.protectiveBarriers_nonSterileGloves);
+                html += createSelectFormItemHTML("ic_ca_masks", "infectionControl_clinicArea_protectiveBarriers_masks", "كمامات", caData.protectiveBarriers_masks);
+                html += createSelectFormItemHTML("ic_ca_coat", "infectionControl_clinicArea_protectiveBarriers_coatOrGown", "معطف أو جاون", caData.protectiveBarriers_coatOrGown);
+                html += createSelectFormItemHTML("ic_ca_shield", "infectionControl_clinicArea_protectiveBarriers_glassesOrFaceShield", "نظارات/واقي وجه", caData.protectiveBarriers_glassesOrFaceShield);
+                html += createSelectFormItemHTML("ic_ca_hve", "infectionControl_clinicArea_disposable_hve", "H.V.E (للاستخدام الواحد)", caData.disposable_hve);
+                html += createSelectFormItemHTML("ic_ca_saliva", "infectionControl_clinicArea_disposable_salivaEjectors", "Saliva Ejectors (للاستخدام الواحد)", caData.disposable_salivaEjectors);
+                html += createSelectFormItemHTML("ic_ca_covers", "infectionControl_clinicArea_disposable_disposableCovers", "أغطية للاستخدام الواحد", caData.disposable_disposableCovers);
+                html += createSelectFormItemHTML("ic_ca_cups", "infectionControl_clinicArea_disposable_cups", "أكواب (للاستخدام الواحد)", caData.disposable_cups);
+                html += createSelectFormItemHTML("ic_ca_bib", "infectionControl_clinicArea_disposable_bib", "Bib (للاستخدام الواحد)", caData.disposable_bib);
+                html += createSelectFormItemHTML("ic_ca_mirrors", "infectionControl_clinicArea_disposable_mirrors", "مرايا (للاستخدام الواحد)", caData.disposable_mirrors);
+                html += createSelectFormItemHTML("ic_ca_impTrays", "infectionControl_clinicArea_disposable_impTrays", "Imp. Trays (للاستخدام الواحد)", caData.disposable_impTrays);
+                html += createSelectFormItemHTML("ic_ca_nozzles", "infectionControl_clinicArea_disposable_airWaterNozzles", "Air/Water Nozzles (للاستخدام الواحد)", caData.disposable_airWaterNozzles);
+                html += `<div class="form-item col-span-full"><label for="ic_ca_notes" class="form-label">ملاحظات منطقة العيادة:</label><textarea id="ic_ca_notes" name="infectionControl_clinicArea_notes" class="form-textarea">${caData.notes || ''}</textarea></div>`;
+
+                html += `<h4 class="col-span-full subsection-title mt-3">غرفة التعقيم</h4>`;
+                html += createSelectFormItemHTML("ic_sr_roomConfig", "infectionControl_sterilizationRoom_roomConfiguration", "تكوين الغرفة", srData.roomConfiguration, ["1 Room", "2 Rooms", "3 Rooms", "In the Clinic"].map(o=>({value:o, text:o.replace('1 Room','غرفة واحدة').replace('2 Rooms','غرفتان').replace('3 Rooms','3 غرف').replace('In the Clinic','في العيادة')})));
+                html += createSelectFormItemHTML("ic_sr_manualWash", "infectionControl_sterilizationRoom_cleaning_manualWash", "غسيل يدوي", srData.cleaning_manualWash);
+                html += createSelectFormItemHTML("ic_sr_ultrasonic", "infectionControl_sterilizationRoom_cleaning_ultrasonicMachine", "جهاز الموجات فوق الصوتية", srData.cleaning_ultrasonicMachine);
+                html += createSelectFormItemHTML("ic_sr_washer", "infectionControl_sterilizationRoom_cleaning_washerDisinfector", "جهاز غسيل وتطهير", srData.cleaning_washerDisinfector);
+                html += createSelectFormItemHTML("ic_sr_lintFree", "infectionControl_sterilizationRoom_drying_lintFreeTowels", "مناشف خالية من الوبر", srData.drying_lintFreeTowels);
+                html += createSelectFormItemHTML("ic_sr_dryer", "infectionControl_sterilizationRoom_drying_dryer", "مجفف", srData.drying_dryer);
+                html += createSelectFormItemHTML("ic_sr_autoNum", "infectionControl_sterilizationRoom_autoclavesNumber", "عدد أجهزة الأوتوكلاف", srData.autoclavesNumber, ["1","2","3","4","5"].map(o=>({value:o, text:o})));
+                html += createSelectFormItemHTML("ic_sr_bioTest", "infectionControl_sterilizationRoom_tests_biologicalTest", "اختبار بيولوجي", srData.tests_biologicalTest);
+                html += createSelectFormItemHTML("ic_sr_bdTest", "infectionControl_sterilizationRoom_tests_bdTest", "B & D Test", srData.tests_bdTest);
+                html += createSelectFormItemHTML("ic_sr_leakTest", "infectionControl_sterilizationRoom_tests_leakTest", "اختبار التسرب", srData.tests_leakTest);
+                html += createSelectFormItemHTML("ic_sr_maintReport", "infectionControl_sterilizationRoom_tests_maintenanceReport", "تقرير صيانة دوري", srData.tests_maintenanceReport);
+                html += `<div class="form-item col-span-full"><label for="ic_sr_notes" class="form-label">ملاحظات غرفة التعقيم:</label><textarea id="ic_sr_notes" name="infectionControl_sterilizationRoom_notes" class="form-textarea">${srData.notes || ''}</textarea></div>`;
+                
+                html += `<h4 class="col-span-full subsection-title mt-3">التطهير</h4>`;
+                html += createSelectFormItemHTML("ic_di_surface", "infectionControl_disinfection_surfaceDisinfection", "تطهير الأسطح", diData.surfaceDisinfection);
+                html += createSelectFormItemHTML("ic_di_impression", "infectionControl_disinfection_impressionDisinfection", "تطهير الطبعات", diData.impressionDisinfection);
+                html += createSelectFormItemHTML("ic_di_container", "infectionControl_disinfection_disinfectionContainer", "وعاء التطهير", diData.disinfectionContainer);
+                html += createSelectFormItemHTML("ic_di_bags", "infectionControl_disinfection_disposableBags", "أكياس للاستخدام الواحد", diData.disposableBags);
+                html += `<div class="form-item col-span-full"><label for="ic_di_notes" class="form-label">ملاحظات التطهير:</label><textarea id="ic_di_notes" name="infectionControl_disinfection_notes" class="form-textarea">${diData.notes || ''}</textarea></div>`;
+
+                html += `<h4 class="col-span-full subsection-title mt-3">التخلص من النفايات</h4>`;
+                html += createSelectFormItemHTML("ic_wd_nonSharp", "infectionControl_wasteDisposal_infectiousWasteNonSharp", "نفايات معدية (غير حادة)", wdData.infectiousWasteNonSharp);
+                html += createSelectFormItemHTML("ic_wd_sharp", "infectionControl_wasteDisposal_infectiousWasteSharp", "نفايات معدية (حادة)", wdData.infectiousWasteSharp);
+                html += createSelectFormItemHTML("ic_wd_nonHaz", "infectionControl_wasteDisposal_nonInfectiousWaste", "نفايات غير معدية/غير خطرة", wdData.nonInfectiousWaste);
+                html += `<div class="form-item col-span-full"><label for="ic_wd_notes" class="form-label">ملاحظات التخلص من النفايات:</label><textarea id="ic_wd_notes" name="infectionControl_wasteDisposal_notes" class="form-textarea">${wdData.notes || ''}</textarea></div>`;
+               
+                html += `<div class="form-item col-span-full"><label for="icNotes" class="form-label">ملاحظات عامة لمكافحة العدوى:</label><textarea id="icNotes" name="infectionControl_notes" class="form-textarea">${icData.notes || ''}</textarea></div>`;
+               
+                const dlData = clinic.dentalLab || {notes: '', type: 'Not Available', environmentHygieneLab: 'Good', surfaceDisinfectionLab: true, impressionLab:true, appliancesLab:true, disinfectionContainerLab:true, disposableBagsLab:true};
+                html += `<h3 class="col-span-full section-title mt-4">مختبر الأسنان (أولي)</h3>`;
+                html += createSelectFormItemHTML("dlType", "dentalLab_type", "نوع المختبر", dlData.type, ['Main Dental Lab', 'Mini Dental Lab', 'Contract', 'IN Other Branch', 'Not Available'].map(opt => ({value: opt, text: opt.replace('Main Dental Lab', 'مختبر رئيسي').replace('Mini Dental Lab', 'مختبر صغير').replace('Contract', 'عقد خارجي').replace('IN Other Branch', 'في فرع آخر').replace('Not Available', 'غير متوفر')})));
+                html += createSelectFormItemHTML("dl_envH", "dentalLab_environmentHygieneLab", "نظافة بيئة المختبر", dlData.environmentHygieneLab, [{value:"Good", text:"جيدة"},{value:"Not Good", text:"غير جيدة"}]);
+                html += createSelectFormItemHTML("dl_surfD", "dentalLab_surfaceDisinfectionLab", "تطهير الأسطح (المختبر)", dlData.surfaceDisinfectionLab);
+                html += createSelectFormItemHTML("dl_imp", "dentalLab_impressionLab", "الطبعات (المختبر)", dlData.impressionLab);
+                html += createSelectFormItemHTML("dl_app", "dentalLab_appliancesLab", "الأجهزة (المختبر)", dlData.appliancesLab);
+                html += createSelectFormItemHTML("dl_cont", "dentalLab_disinfectionContainerLab", "وعاء التطهير (المختبر)", dlData.disinfectionContainerLab);
+                html += createSelectFormItemHTML("dl_bags", "dentalLab_disposableBagsLab", "أكياس للاستخدام الواحد (المختبر)", dlData.disposableBagsLab);
+                html += `<div class="form-item col-span-full"><label for="dlNotes" class="form-label">ملاحظات مختبر الأسنان:</label><textarea id="dlNotes" name="dentalLab_notes" class="form-textarea">${dlData.notes || ''}</textarea></div>`;
+
+                const xrData = clinic.xrayRoom || {notes: '', environmentHygieneXray: 'Good', protectiveBarriersXray:true, surfacesDisinfectionXray:true, glovesXray:true, trashBasketXray:true, leadApronXray:true, xrayTypes: {paFixed:true, paMobile:false, opg:true, cephalometric:false, cbct:false, rpdLicense:"Available"}};
+                const xtData = xrData.xrayTypes || {};
+                html += `<h3 class="col-span-full section-title mt-4">غرفة الأشعة (أولية)</h3>`;
+                html += createSelectFormItemHTML("xr_envH", "xrayRoom_environmentHygieneXray", "نظافة بيئة الأشعة", xrData.environmentHygieneXray, [{value:"Good", text:"جيدة"},{value:"Not Good", text:"غير جيدة"}]);
+                html += createSelectFormItemHTML("xr_protB", "xrayRoom_protectiveBarriersXray", "الحواجز الواقية (الأشعة)", xrData.protectiveBarriersXray);
+                html += createSelectFormItemHTML("xr_surfD", "xrayRoom_surfacesDisinfectionXray", "تطهير الأسطح (الأشعة)", xrData.surfacesDisinfectionXray);
+                html += createSelectFormItemHTML("xr_gloves", "xrayRoom_glovesXray", "القفازات (الأشعة)", xrData.glovesXray);
+                html += createSelectFormItemHTML("xr_trash", "xrayRoom_trashBasketXray", "سلة المهملات (الأشعة)", xrData.trashBasketXray);
+                html += createSelectFormItemHTML("xr_apron", "xrayRoom_leadApronXray", "مريول الرصاص (الأشعة)", xrData.leadApronXray);
+                html += `<h4 class="col-span-full subsection-title mt-3">أنواع الأشعة</h4>`;
+                html += createSelectFormItemHTML("xt_paF", "xrayRoom_xrayTypes_paFixed", "P.A ثابت", xtData.paFixed);
+                html += createSelectFormItemHTML("xt_paM", "xrayRoom_xrayTypes_paMobile", "P.A متنقل", xtData.paMobile);
+                html += createSelectFormItemHTML("xt_opg", "xrayRoom_xrayTypes_opg", "O.P.G", xtData.opg);
+                html += createSelectFormItemHTML("xt_ceph", "xrayRoom_xrayTypes_cephalometric", "Cephalometric", xtData.cephalometric);
+                html += createSelectFormItemHTML("xt_cbct", "xrayRoom_xrayTypes_cbct", "CBCT", xtData.cbct);
+                html += `<div class="form-item"><label for="xt_rpd" class="form-label">ترخيص RPD:</label><input type="text" id="xt_rpd" name="xrayRoom_xrayTypes_rpdLicense" class="form-input" value="${xtData.rpdLicense || ''}"></div>`;
+                html += `<div class="form-item col-span-full"><label for="xrNotes" class="form-label">ملاحظات غرفة الأشعة:</label><textarea id="xrNotes" name="xrayRoom_notes" class="form-textarea">${xrData.notes || ''}</textarea></div>`;
+               
+                const impData = clinic.implants || {performsImplants: false, implantWasherAvailable: false, notes: ''};
+                html += `<h3 class="col-span-full section-title mt-4">زراعة الأسنان (أولية)</h3>`;
+                html += createSelectFormItemHTML("imp_performs", "implants_performsImplants", "المركز يقوم بالزراعة", impData.performsImplants, [{value:true, text:"نعم"}, {value:false, text:"لا"}]);
+                html += createSelectFormItemHTML("imp_washer", "implants_implantWasherAvailable", "تتوفر غسالة لأدوات الزراعة", impData.implantWasherAvailable, [{value:true, text:"نعم"}, {value:false, text:"لا"}]);
+                html += `<div class="form-item col-span-full"><label for="imp_notes" class="form-label">ملاحظات زراعة الأسنان:</label><textarea id="imp_notes" name="implants_notes" class="form-textarea">${impData.notes || ''}</textarea></div>`;
+                html += `<p class="col-span-full text-sm text-gray-500 mt-2">سيتم إضافة/تعديل معلومات أطباء الزراعة التفصيلية في قسم زراعة الأسنان لاحقاً.</p>`;
+
+                return html;
+            }
+           
+            if(saveChangesButton && editClinicFormEl) {
+                saveChangesButton.addEventListener('click', function() {
+                    if (!currentClinicId) return;
+                    const clinicIndex = clinics.findIndex(c => c.id === currentClinicId);
+                    if (clinicIndex === -1) return;
+                    const formData = new FormData(editClinicFormEl);
+                    const clinicToUpdate = clinics[clinicIndex];
+                    clinicToUpdate.name = formData.get('name') || clinicToUpdate.name; 
+                    clinicToUpdate.address = formData.get('address');
+                    clinicToUpdate.phone = formData.get('phone');
+                    clinicToUpdate.classification = formData.get('classification');
+                    clinicToUpdate.licenseHolder = formData.get('licenseHolder');
+                   
+                    displayUIMessage(editFormMessage, "تم حفظ التعديلات الأساسية بنجاح!", "success");
+                    setTimeout(() => {
+                        if(editFormMessage) { editFormMessage.textContent = ''; editFormMessage.className = 'mt-4 text-center'; }
+                        showClinicProfilePage(currentClinicId); 
+                        populateClinicList(); 
+                    }, 1500);
+                });
+            }
+           
+            if(cancelEditButton) {
+                cancelEditButton.addEventListener('click', function() {
+                    if (!currentClinicId) return;
+                    showClinicProfilePage(currentClinicId); 
+                    if(editFormMessage) { editFormMessage.textContent = ''; editFormMessage.className = 'mt-4 text-center'; }
+                });
+            }
+
+            // --- Add New Clinic ---
+            if(showAddClinicFormButton) {
+                showAddClinicFormButton.addEventListener('click', function() { 
+                    showSection('addClinicFormSection');
+                    if(addClinicFormEl) addClinicFormEl.innerHTML = generateClinicFormHTML(); 
+                    if(addFormMessage) { addFormMessage.textContent = ''; addFormMessage.className = 'mt-4 text-center'; }
+                });
+            }
+
+            if(saveNewClinicButton && addClinicFormEl) {
+                saveNewClinicButton.addEventListener('click', function() {
+                    const formData = new FormData(addClinicFormEl);
+                    const clinicName = formData.get('name');
+                    if (!clinicName || clinicName.trim() === "") {
+                        displayUIMessage(addFormMessage, "اسم العيادة مطلوب.", "error"); return;
+                    }
+                    const newClinic = {
+                        id: `clinic_${Date.now()}`,
+                        name: clinicName,
+                        address: formData.get('address'),
+                        phone: formData.get('phone'),
+                        classification: formData.get('classification'),
+                        licenseHolder: formData.get('licenseHolder'),
+                        staffInformation: { 
+                            doctorsCount: parseInt(formData.get('staffInformation_doctorsCount')) || 0,
+                            visitingDoctorsCount: parseInt(formData.get('staffInformation_visitingDoctorsCount')) || 0,
+                            nursingStaffCount: parseInt(formData.get('staffInformation_nursingStaffCount')) || 0,
+                            techniciansCount: parseInt(formData.get('staffInformation_techniciansCount')) || 0,
+                            doctorsTable: Array(10).fill({ name: "", specialization: "", licenseNumber: "", licenseIssueDate: "", licenseExpiryDate: "" }),
+                            visitingDoctorsTable: Array(3).fill({ name: "", specialization: "", licenseNumber: "", licenseIssueDate: "", licenseExpiryDate: "" }),
+                            nursingStaffTable: Array(4).fill({ name: "", specialization: "", licenseNumber: "", licenseIssueDate: "", licenseExpiryDate: "" }),
+                            techniciansTable: Array(3).fill({ name: "", specialization: "", licenseNumber: "", licenseIssueDate: "", licenseExpiryDate: "" }),
+                            staffNotes: formData.get('staffInformation_staffNotes') || ''
+                        },
+                        infectionControl: {
+                            clinicArea: {
+                                environmentHygiene: formData.get('infectionControl_clinicArea_environmentHygiene'),
+                                handWashing_washingFacilities: formData.get('infectionControl_clinicArea_handWashing_washingFacilities') === 'true',
+                                handWashing_dryingFacilities: formData.get('infectionControl_clinicArea_handWashing_dryingFacilities') === 'true',
+                                handWashing_disinfectantHandRub: formData.get('infectionControl_clinicArea_handWashing_disinfectantHandRub') === 'true',
+                                protectiveBarriers_sterileGloves: formData.get('infectionControl_clinicArea_protectiveBarriers_sterileGloves') === 'true',
+                                protectiveBarriers_nonSterileGloves: formData.get('infectionControl_clinicArea_protectiveBarriers_nonSterileGloves') === 'true',
+                                protectiveBarriers_masks: formData.get('infectionControl_clinicArea_protectiveBarriers_masks') === 'true',
+                                protectiveBarriers_coatOrGown: formData.get('infectionControl_clinicArea_protectiveBarriers_coatOrGown') === 'true',
+                                protectiveBarriers_glassesOrFaceShield: formData.get('infectionControl_clinicArea_protectiveBarriers_glassesOrFaceShield') === 'true',
+                                disposable_hve: formData.get('infectionControl_clinicArea_disposable_hve') === 'true',
+                                disposable_salivaEjectors: formData.get('infectionControl_clinicArea_disposable_salivaEjectors') === 'true',
+                                disposable_disposableCovers: formData.get('infectionControl_clinicArea_disposable_disposableCovers') === 'true',
+                                disposable_cups: formData.get('infectionControl_clinicArea_disposable_cups') === 'true',
+                                disposable_bib: formData.get('infectionControl_clinicArea_disposable_bib') === 'true',
+                                disposable_mirrors: formData.get('infectionControl_clinicArea_disposable_mirrors') === 'true',
+                                disposable_impTrays: formData.get('infectionControl_clinicArea_disposable_impTrays') === 'true',
+                                disposable_airWaterNozzles: formData.get('infectionControl_clinicArea_disposable_airWaterNozzles') === 'true',
+                                notes: formData.get('infectionControl_clinicArea_notes') || ''
+                            },
+                            sterilizationRoom: {
+                                roomConfiguration: formData.get('infectionControl_sterilizationRoom_roomConfiguration'),
+                                cleaning_manualWash: formData.get('infectionControl_sterilizationRoom_cleaning_manualWash') === 'true',
+                                cleaning_ultrasonicMachine: formData.get('infectionControl_sterilizationRoom_cleaning_ultrasonicMachine') === 'true',
+                                cleaning_washerDisinfector: formData.get('infectionControl_sterilizationRoom_cleaning_washerDisinfector') === 'true',
+                                drying_lintFreeTowels: formData.get('infectionControl_sterilizationRoom_drying_lintFreeTowels') === 'true',
+                                drying_dryer: formData.get('infectionControl_sterilizationRoom_drying_dryer') === 'true',
+                                autoclavesNumber: formData.get('infectionControl_sterilizationRoom_autoclavesNumber'),
+                                tests_biologicalTest: formData.get('infectionControl_sterilizationRoom_tests_biologicalTest') === 'true',
+                                tests_bdTest: formData.get('infectionControl_sterilizationRoom_tests_bdTest') === 'true',
+                                tests_leakTest: formData.get('infectionControl_sterilizationRoom_tests_leakTest') === 'true',
+                                tests_maintenanceReport: formData.get('infectionControl_sterilizationRoom_tests_maintenanceReport') === 'true',
+                                notes: formData.get('infectionControl_sterilizationRoom_notes') || ''
+                            },
+                            disinfection: {
+                                surfaceDisinfection: formData.get('infectionControl_disinfection_surfaceDisinfection') === 'true',
+                                impressionDisinfection: formData.get('infectionControl_disinfection_impressionDisinfection') === 'true',
+                                disinfectionContainer: formData.get('infectionControl_disinfection_disinfectionContainer') === 'true',
+                                disposableBags: formData.get('infectionControl_disinfection_disposableBags') === 'true',
+                                notes: formData.get('infectionControl_disinfection_notes') || ''
+                            },
+                            wasteDisposal: {
+                                infectiousWasteNonSharp: formData.get('infectionControl_wasteDisposal_infectiousWasteNonSharp') === 'true',
+                                infectiousWasteSharp: formData.get('infectionControl_wasteDisposal_infectiousWasteSharp') === 'true',
+                                nonInfectiousWaste: formData.get('infectionControl_wasteDisposal_nonInfectiousWaste') === 'true',
+                                notes: formData.get('infectionControl_wasteDisposal_notes') || ''
+                            },
+                            notes: formData.get('infectionControl_notes') || ''
+                        },
+                        dentalLab: { 
+                            type: formData.get('dentalLab_type'),
+                            environmentHygieneLab: formData.get('dentalLab_environmentHygieneLab'),
+                            surfaceDisinfectionLab: formData.get('dentalLab_surfaceDisinfectionLab') === 'true',
+                            impressionLab: formData.get('dentalLab_impressionLab') === 'true',
+                            appliancesLab: formData.get('dentalLab_appliancesLab') === 'true',
+                            disinfectionContainerLab: formData.get('dentalLab_disinfectionContainerLab') === 'true',
+                            disposableBagsLab: formData.get('dentalLab_disposableBagsLab') === 'true',
+                            notes: formData.get('dentalLab_notes') || '' 
+                        },
+                        xrayRoom: { 
+                            environmentHygieneXray: formData.get('xrayRoom_environmentHygieneXray'),
+                            protectiveBarriersXray: formData.get('xrayRoom_protectiveBarriersXray') === 'true',
+                            surfacesDisinfectionXray: formData.get('xrayRoom_surfacesDisinfectionXray') === 'true',
+                            glovesXray: formData.get('xrayRoom_glovesXray') === 'true',
+                            trashBasketXray: formData.get('xrayRoom_trashBasketXray') === 'true',
+                            leadApronXray: formData.get('xrayRoom_leadApronXray') === 'true',
+                            xrayTypes: {
+                                paFixed: formData.get('xrayRoom_xrayTypes_paFixed') === 'true',
+                                paMobile: formData.get('xrayRoom_xrayTypes_paMobile') === 'true',
+                                opg: formData.get('xrayRoom_xrayTypes_opg') === 'true',
+                                cephalometric: formData.get('xrayRoom_xrayTypes_cephalometric') === 'true',
+                                cbct: formData.get('xrayRoom_xrayTypes_cbct') === 'true',
+                                rpdLicense: formData.get('xrayRoom_xrayTypes_rpdLicense')
+                            },
+                            notes: formData.get('xrayRoom_notes') || '' 
+                        },
+                        implants: { 
+                            performsImplants: formData.get('implants_performsImplants') === 'true',
+                            implantWasherAvailable: formData.get('implants_implantWasherAvailable') === 'true',
+                            implantDoctors: Array(6).fill({ name: "", specialization: "", implantType: "", implantLicense: "" }), 
+                            notes: formData.get('implants_notes') || ''
+                        }
+                    };
+                    clinics.push(newClinic);
+                    populateClinicList();
+                    displayUIMessage(addFormMessage, `تمت إضافة عيادة "${newClinic.name}" بنجاح!`, "success");
+                    setTimeout(() => {
+                        showSection('dashboardSection'); 
+                        if(addFormMessage) { addFormMessage.textContent = ''; addFormMessage.className = 'mt-4 text-center'; }
+                    }, 2000);
+                });
+            }
+           
+            if(cancelAddClinicButton) {
+                cancelAddClinicButton.addEventListener('click', function() {
+                    showSection('dashboardSection'); 
+                    if(addFormMessage) { addFormMessage.textContent = ''; addFormMessage.className = 'mt-4 text-center';}
+                });
+            }
+           
+            // --- Edit Detail Sections ---
+            window.prepareEditForDetailSubSection = function(mainSectionKey, subSectionKey = null) { 
+                if (!currentClinicId) return;
+                const clinic = clinics.find(c => c.id === currentClinicId);
+                if (!clinic) return;
+
+                currentMainDetailSectionKey = mainSectionKey;
+                currentICSubSectionToEdit = (mainSectionKey === 'infectionControl') ? subSectionKey : null; 
+
+                let dataToEdit;
+                let editTitle = `تعديل تفاصيل ${getSectionArabicName(mainSectionKey)}`;
+
+                if (mainSectionKey === 'infectionControl') {
+                    if (!clinic.infectionControl) clinic.infectionControl = { clinicArea: {notes:''}, sterilizationRoom: {notes:''}, disinfection: {notes:''}, wasteDisposal: {notes:''}, notes: '' };
+                    if (subSectionKey) { 
+                        if (!clinic.infectionControl[subSectionKey]) clinic.infectionControl[subSectionKey] = {notes:''}; 
+                        dataToEdit = clinic.infectionControl[subSectionKey];
+                        editTitle += ` - ${getICSubSectionArabicName(subSectionKey)}`;
+                    } else { 
+                        dataToEdit = clinic.infectionControl; 
+                    }
+                } else { 
+                    if (!clinic[mainSectionKey]) { 
+                        if (mainSectionKey === 'staffInformation') clinic[mainSectionKey] = { doctorsCount:0, visitingDoctorsCount:0, nursingStaffCount:0, techniciansCount:0, doctorsTable: Array(10).fill({}), visitingDoctorsTable: Array(3).fill({}), nursingStaffTable: Array(4).fill({}), techniciansTable: Array(3).fill({}), staffNotes: '' };
+                        else if (mainSectionKey === 'dentalLab') clinic[mainSectionKey] = { notes: '', type: 'Not Available', environmentHygieneLab: 'Good' }; 
+                        else if (mainSectionKey === 'xrayRoom') clinic[mainSectionKey] = { notes: '', environmentHygieneXray: 'Good', xrayTypes: {} }; 
+                        else if (mainSectionKey === 'implants') clinic[mainSectionKey] = { performsImplants: false, implantWasherAvailable: false, implantDoctors: Array(6).fill({}), notes: ''};
+                        else clinic[mainSectionKey] = { notes: '' }; 
+                    }
+                    dataToEdit = clinic[mainSectionKey];
+                }
+               
+                showSection('detailEditFormSection'); 
+                if(detailEditFormTitle) detailEditFormTitle.textContent = `${editTitle} لـ: ${clinic.name}`;
+                if(detailEditFormEl) detailEditFormEl.innerHTML = generateDetailEditFormHTML(dataToEdit, mainSectionKey, currentICSubSectionToEdit);
+                if(detailFormMessage) { detailFormMessage.textContent = ''; detailFormMessage.className = 'mt-4 text-center'; }
+            }
+
+            function createSelectFormItemHTML(id, name, labelText, currentValue, options = [{value:true, text:"متوفر"}, {value:false, text:"غير متوفر"}, {value:"N/A", text:"لا ينطبق"}], itemClass = "form-item") {
+                let optionsHtml = '';
+                options.forEach(opt => {
+                    const isSelected = String(currentValue) === String(opt.value) || 
+                                       (typeof currentValue === 'boolean' && String(currentValue) === opt.value.toString());
+                    optionsHtml += `<option value="${opt.value}" ${isSelected ? 'selected' : ''}>${opt.text}</option>`;
+                });
+                return `<div class="${itemClass}"><label for="${id}" class="form-label">${labelText}:</label><select id="${id}" name="${name}" class="form-select">${optionsHtml}</select></div>`;
+            }
+           
+            function generateDetailEditFormHTML(data, mainSectionKey, subSectionKey = null) {
+                let formHtml = '';
+                if (mainSectionKey === 'staffInformation') {
+                    const si = data || { doctorsTable: Array(10).fill({}), visitingDoctorsTable: Array(3).fill({}), nursingStaffTable: Array(4).fill({}), techniciansTable: Array(3).fill({}) };
+                    formHtml = `<div class="form-item"><label for="detail_staff_doctorsCount" class="form-label">عدد الأطباء:</label><input type="number" id="detail_staff_doctorsCount" name="doctorsCount" class="form-input" value="${si.doctorsCount || 0}" min="0"></div>`;
+                    formHtml += `<div class="form-item"><label for="detail_staff_visitingDoctorsCount" class="form-label">عدد الأطباء الزائرين:</label><input type="number" id="detail_staff_visitingDoctorsCount" name="visitingDoctorsCount" class="form-input" value="${si.visitingDoctorsCount || 0}" min="0"></div>`;
+                    formHtml += `<div class="form-item"><label for="detail_staff_nursingStaffCount" class="form-label">عدد هيئة التمريض:</label><input type="number" id="detail_staff_nursingStaffCount" name="nursingStaffCount" class="form-input" value="${si.nursingStaffCount || 0}" min="0"></div>`;
+                    formHtml += `<div class="form-item"><label for="detail_staff_techniciansCount" class="form-label">عدد الفنيين:</label><input type="number" id="detail_staff_techniciansCount" name="techniciansCount" class="form-input" value="${si.techniciansCount || 0}" min="0"></div>`;
+
+                    const tableConfigs = [
+                        { title: "الأطباء (حتى 10)", prefix: "doctorsTable", count: 10, dataArray: si.doctorsTable || Array(10).fill({}) },
+                        { title: "الأطباء الزائرون (حتى 3)", prefix: "visitingDoctorsTable", count: 3, dataArray: si.visitingDoctorsTable || Array(3).fill({}) },
+                        { title: "هيئة التمريض (حتى 4)", prefix: "nursingStaffTable", count: 4, dataArray: si.nursingStaffTable || Array(4).fill({}), colHeader: "التخصص/التصنيف" },
+                        { title: "الفنيون (حتى 3)", prefix: "techniciansTable", count: 3, dataArray: si.techniciansTable || Array(3).fill({}) }
+                    ];
+
+                    tableConfigs.forEach(config => {
+                        formHtml += `<h4 class="subsection-title col-span-full mt-4">${config.title}</h4><div class="table-container col-span-full"><table><thead><tr><th>الاسم</th><th>${config.colHeader || 'التخصص'}</th><th>رقم الترخيص</th><th>تاريخ الترخيص</th><th>انتهاء الترخيص</th></tr></thead><tbody>`;
+                        for(let i=0; i < config.count; i++) {
+                            const itemData = config.dataArray[i] || {};
+                            formHtml += `<tr>
+                                <td><input type="text" name="${config.prefix}_${i}_name" class="form-input" value="${itemData.name || ''}"></td>
+                                <td><input type="text" name="${config.prefix}_${i}_specialization" class="form-input" value="${itemData.specialization || ''}"></td>
+                                <td><input type="text" name="${config.prefix}_${i}_licenseNumber" class="form-input" value="${itemData.licenseNumber || ''}"></td>
+                                <td><input type="date" name="${config.prefix}_${i}_licenseIssueDate" class="form-input" value="${itemData.licenseIssueDate || ''}"></td>
+                                <td><input type="date" name="${config.prefix}_${i}_licenseExpiryDate" class="form-input" value="${itemData.licenseExpiryDate || ''}"></td>
+                            </tr>`;
+                        }
+                        formHtml += `</tbody></table></div>`;
+                    });
+                    formHtml += `<div class="form-item col-span-full mt-4"><label for="detail_staffNotes" class="form-label">ملاحظات الكادر:</label><textarea id="detail_staffNotes" name="staffNotes" class="form-textarea">${si.staffNotes || ''}</textarea></div>`;
+                
+                } else if (mainSectionKey === 'infectionControl') {
+                    if (subSectionKey === 'clinicArea') {
+                        const ca = data || {}; 
+                        formHtml = `<h3 class="subsection-title col-span-full">منطقة العيادة</h3>`;
+                        formHtml += createSelectFormItemHTML("detail_ic_ca_envH", "environmentHygiene", "نظافة البيئة", ca.environmentHygiene, [{value:"Good", text:"جيدة"}, {value:"Not Good", text:"غير جيدة"}]);
+                        formHtml += `<h4 class="subsection-title col-span-full mt-3">غسيل الأيدي</h4>`;
+                        formHtml += createSelectFormItemHTML("detail_ic_ca_washF", "handWashing_washingFacilities", "مرافق غسيل الأيدي", ca.handWashing_washingFacilities);
+                        formHtml += createSelectFormItemHTML("detail_ic_ca_dryF", "handWashing_dryingFacilities", "مرافق تجفيف الأيدي", ca.handWashing_dryingFacilities);
+                        formHtml += createSelectFormItemHTML("detail_ic_ca_rub", "handWashing_disinfectantHandRub", "معقم الأيدي", ca.handWashing_disinfectantHandRub);
+                        formHtml += `<h4 class="subsection-title col-span-full mt-3">الحواجز الواقية</h4>`;
+                        formHtml += createSelectFormItemHTML("detail_ic_ca_sGl", "protectiveBarriers_sterileGloves", "قفازات معقمة", ca.protectiveBarriers_sterileGloves);
+                        formHtml += createSelectFormItemHTML("detail_ic_ca_nsGl", "protectiveBarriers_nonSterileGloves", "قفازات غير معقمة", ca.protectiveBarriers_nonSterileGloves);
+                        formHtml += createSelectFormItemHTML("detail_ic_ca_masks", "protectiveBarriers_masks", "كمامات", ca.protectiveBarriers_masks);
+                        formHtml += createSelectFormItemHTML("detail_ic_ca_coat", "protectiveBarriers_coatOrGown", "معطف أو جاون", ca.protectiveBarriers_coatOrGown);
+                        formHtml += createSelectFormItemHTML("detail_ic_ca_shield", "protectiveBarriers_glassesOrFaceShield", "نظارات/واقي وجه", ca.protectiveBarriers_glassesOrFaceShield);
+                        formHtml += `<h4 class="subsection-title col-span-full mt-3">استخدام الأدوات ذات الاستخدام الواحد</h4>`;
+                        formHtml += createSelectFormItemHTML("detail_ic_ca_hve", "disposable_hve", "H.V.E", ca.disposable_hve);
+                        formHtml += createSelectFormItemHTML("detail_ic_ca_saliva", "disposable_salivaEjectors", "Saliva Ejectors", ca.disposable_salivaEjectors);
+                        formHtml += createSelectFormItemHTML("detail_ic_ca_covers", "disposable_disposableCovers", "أغطية للاستخدام الواحد", ca.disposable_disposableCovers);
+                        formHtml += createSelectFormItemHTML("detail_ic_ca_cups", "disposable_cups", "أكواب", ca.disposable_cups);
+                        formHtml += createSelectFormItemHTML("detail_ic_ca_bib", "disposable_bib", "Bib", ca.disposable_bib);
+                        formHtml += createSelectFormItemHTML("detail_ic_ca_mirrors", "disposable_mirrors", "مرايا للاستخدام الواحد", ca.disposable_mirrors);
+                        formHtml += createSelectFormItemHTML("detail_ic_ca_impTrays", "disposable_impTrays", "Imp. Trays للاستخدام الواحد", ca.disposable_impTrays);
+                        formHtml += createSelectFormItemHTML("detail_ic_ca_nozzles", "disposable_airWaterNozzles", "Air/Water Syringe Nozzles", ca.disposable_airWaterNozzles);
+                        formHtml += `<div class="form-item col-span-full"><label for="detail_ic_ca_notes" class="form-label">ملاحظات منطقة العيادة:</label><textarea id="detail_ic_ca_notes" name="notes" class="form-textarea">${ca.notes || ''}</textarea></div>`;
+                    } else if (subSectionKey === 'sterilizationRoom') {
+                        const sr = data || {}; 
+                        formHtml += `<h3 class="subsection-title col-span-full">غرفة التعقيم</h3>`;
+                        formHtml += createSelectFormItemHTML("detail_ic_sr_roomConfig", "roomConfiguration", "تكوين الغرفة", sr.roomConfiguration, ["1 Room", "2 Rooms", "3 Rooms", "In the Clinic"].map(o=>({value:o, text:o.replace('1 Room','غرفة واحدة').replace('2 Rooms','غرفتان').replace('3 Rooms','3 غرف').replace('In the Clinic','في العيادة')})));
+                        formHtml += `<h4 class="subsection-title col-span-full mt-3">تنظيف الأدوات</h4>`;
+                        formHtml += createSelectFormItemHTML("detail_ic_sr_manualW", "cleaning_manualWash", "غسيل يدوي", sr.cleaning_manualWash);
+                        formHtml += createSelectFormItemHTML("detail_ic_sr_ultraM", "cleaning_ultrasonicMachine", "جهاز الموجات فوق الصوتية", sr.cleaning_ultrasonicMachine);
+                        formHtml += createSelectFormItemHTML("detail_ic_sr_washerD", "cleaning_washerDisinfector", "جهاز غسيل وتطهير", sr.cleaning_washerDisinfector);
+                        formHtml += `<h4 class="subsection-title col-span-full mt-3">تجفيف الأدوات</h4>`;
+                        formHtml += createSelectFormItemHTML("detail_ic_sr_lintF", "drying_lintFreeTowels", "مناشف خالية من الوبر", sr.drying_lintFreeTowels);
+                        formHtml += createSelectFormItemHTML("detail_ic_sr_dryer", "drying_dryer", "مجفف", sr.drying_dryer);
+                        formHtml += createSelectFormItemHTML("detail_ic_sr_autoN", "autoclavesNumber", "عدد أجهزة الأوتوكلاف", sr.autoclavesNumber, ["1","2","3","4","5"].map(o=>({value:o, text:o})));
+                        formHtml += `<h4 class="subsection-title col-span-full mt-3">أنواع الاختبارات</h4>`;
+                        formHtml += createSelectFormItemHTML("detail_ic_sr_bioT", "tests_biologicalTest", "اختبار بيولوجي", sr.tests_biologicalTest);
+                        formHtml += createSelectFormItemHTML("detail_ic_sr_bdT", "tests_bdTest", "B & D Test", sr.tests_bdTest);
+                        formHtml += createSelectFormItemHTML("detail_ic_sr_leakT", "tests_leakTest", "اختبار التسرب", sr.tests_leakTest);
+                        formHtml += createSelectFormItemHTML("detail_ic_sr_maintR", "tests_maintenanceReport", "تقرير صيانة دوري", sr.tests_maintenanceReport);
+                        formHtml += `<div class="form-item col-span-full"><label for="detail_ic_sr_notes" class="form-label">ملاحظات غرفة التعقيم:</label><textarea id="detail_ic_sr_notes" name="notes" class="form-textarea">${sr.notes || ''}</textarea></div>`;
+                    } else if (subSectionKey === 'disinfection') {
+                        const di = data || {}; 
+                        formHtml += `<h3 class="subsection-title col-span-full">التطهير</h3>`;
+                        formHtml += createSelectFormItemHTML("detail_ic_di_surface", "surfaceDisinfection", "تطهير الأسطح", di.surfaceDisinfection);
+                        formHtml += createSelectFormItemHTML("detail_ic_di_impression", "impressionDisinfection", "تطهير الطبعات", di.impressionDisinfection);
+                        formHtml += createSelectFormItemHTML("detail_ic_di_container", "disinfectionContainer", "وعاء التطهير", di.disinfectionContainer);
+                        formHtml += createSelectFormItemHTML("detail_ic_di_bags", "disposableBags", "أكياس للاستخدام الواحد", di.disposableBags);
+                        formHtml += `<div class="form-item col-span-full"><label for="detail_ic_di_notes" class="form-label">ملاحظات التطهير:</label><textarea id="detail_ic_di_notes" name="notes" class="form-textarea">${di.notes || ''}</textarea></div>`;
+                    } else if (subSectionKey === 'wasteDisposal') {
+                        const wd = data || {}; 
+                        formHtml += `<h3 class="subsection-title col-span-full">التخلص من النفايات</h3>`;
+                        formHtml += createSelectFormItemHTML("detail_ic_wd_nonSharp", "infectiousWasteNonSharp", "نفايات معدية (غير حادة)", wd.infectiousWasteNonSharp);
+                        formHtml += createSelectFormItemHTML("detail_ic_wd_sharp", "infectiousWasteSharp", "نفايات معدية (حادة)", wd.infectiousWasteSharp);
+                        formHtml += createSelectFormItemHTML("detail_ic_wd_nonHaz", "nonInfectiousWaste", "نفايات غير معدية/غير خطرة", wd.nonInfectiousWaste);
+                        formHtml += `<div class="form-item col-span-full"><label for="detail_ic_wd_notes" class="form-label">ملاحظات التخلص من النفايات:</label><textarea id="detail_ic_wd_notes" name="notes" class="form-textarea">${wd.notes || ''}</textarea></div>`;
+                    } else { 
+                         const icGen = data || {}; // data here is the whole clinic.infectionControl object
+                         formHtml += `<div class="form-item col-span-full"><label for="detail_ic_general_notes" class="form-label">ملاحظات عامة لمكافحة العدوى:</label><textarea id="detail_ic_general_notes" name="general_ic_notes" class="form-textarea">${icGen.notes || ''}</textarea></div>`;
+                    }
+                } else if (mainSectionKey === 'dentalLab') {
+                    const dl = data || {};
+                    formHtml = `<h3 class="subsection-title col-span-full">مختبر الأسنان</h3>`;
+                    formHtml += createSelectFormItemHTML("detail_dlType", "type", "نوع المختبر", dl.type, ['Main Dental Lab', 'Mini Dental Lab', 'Contract', 'IN Other Branch', 'Not Available'].map(opt => ({value: opt, text: opt.replace('Main Dental Lab', 'مختبر رئيسي').replace('Mini Dental Lab', 'مختبر صغير').replace('Contract', 'عقد خارجي').replace('IN Other Branch', 'في فرع آخر').replace('Not Available', 'غير متوفر')})));
+                    formHtml += createSelectFormItemHTML("detail_dl_envH", "environmentHygieneLab", "نظافة البيئة", dl.environmentHygieneLab, [{value:"Good", text:"جيدة"}, {value:"Not Good", text:"غير جيدة"}]);
+                    formHtml += createSelectFormItemHTML("detail_dl_surfD", "surfaceDisinfectionLab", "تطهير الأسطح", dl.surfaceDisinfectionLab);
+                    formHtml += createSelectFormItemHTML("detail_dl_imp", "impressionLab", "الطبعات", dl.impressionLab);
+                    formHtml += createSelectFormItemHTML("detail_dl_app", "appliancesLab", "الأجهزة", dl.appliancesLab);
+                    formHtml += createSelectFormItemHTML("detail_dl_cont", "disinfectionContainerLab", "وعاء التطهير", dl.disinfectionContainerLab);
+                    formHtml += createSelectFormItemHTML("detail_dl_bags", "disposableBagsLab", "أكياس للاستخدام الواحد", dl.disposableBagsLab);
+                    formHtml += `<div class="form-item col-span-full"><label for="detail_dlNotes" class="form-label">ملاحظات مختبر الأسنان:</label><textarea id="detail_dlNotes" name="notes" class="form-textarea">${dl.notes || ''}</textarea></div>`;
+                } else if (mainSectionKey === 'xrayRoom') {
+                    const xr = data || {};
+                    const xt = xr.xrayTypes || {};
+                    formHtml = `<h3 class="subsection-title col-span-full">غرفة الأشعة</h3>`;
+                    formHtml += createSelectFormItemHTML("detail_xr_envH", "environmentHygieneXray", "فحص نظافة البيئة", xr.environmentHygieneXray, [{value:"Good", text:"جيدة"}, {value:"Not Good", text:"غير جيدة"}]);
+                    formHtml += createSelectFormItemHTML("detail_xr_protB", "protectiveBarriersXray", "الحواجز الواقية", xr.protectiveBarriersXray);
+                    formHtml += createSelectFormItemHTML("detail_xr_surfD", "surfacesDisinfectionXray", "تطهير الأسطح", xr.surfacesDisinfectionXray);
+                    formHtml += createSelectFormItemHTML("detail_xr_gloves", "glovesXray", "القفازات", xr.glovesXray);
+                    formHtml += createSelectFormItemHTML("detail_xr_trash", "trashBasketXray", "سلة المهملات", xr.trashBasketXray);
+                    formHtml += createSelectFormItemHTML("detail_xr_apron", "leadApronXray", "مريول الرصاص", xr.leadApronXray);
+                    formHtml += `<h4 class="subsection-title col-span-full mt-3">أنواع الأشعة</h4>`;
+                    formHtml += createSelectFormItemHTML("detail_xt_paF", "xrayTypes_paFixed", "P.A ثابت", xt.paFixed);
+                    formHtml += createSelectFormItemHTML("detail_xt_paM", "xrayTypes_paMobile", "P.A متنقل", xt.paMobile);
+                    formHtml += createSelectFormItemHTML("detail_xt_opg", "xrayTypes_opg", "O.P.G", xt.opg);
+                    formHtml += createSelectFormItemHTML("detail_xt_ceph", "xrayTypes_cephalometric", "Cephalometric", xt.cephalometric);
+                    formHtml += createSelectFormItemHTML("detail_xt_cbct", "xrayTypes_cbct", "CBCT", xt.cbct);
+                    formHtml += `<div class="form-item"><label for="detail_xt_rpd" class="form-label">ترخيص RPD:</label><input type="text" id="detail_xt_rpd" name="xrayTypes_rpdLicense" class="form-input" value="${xt.rpdLicense || ''}"></div>`; 
+                    formHtml += `<div class="form-item col-span-full"><label for="detail_xrNotes" class="form-label">ملاحظات غرفة الأشعة:</label><textarea id="detail_xrNotes" name="notes" class="form-textarea">${xr.notes || ''}</textarea></div>`;
+                } else if (mainSectionKey === 'implants') {
+                    const imp = data || {implantDoctors: Array(6).fill({})}; 
+                    formHtml = `<h3 class="subsection-title col-span-full">زراعة الأسنان</h3>`;
+                    formHtml += createSelectFormItemHTML("detail_imp_performs", "performsImplants", "المركز يقوم بعمل الزراعة", imp.performsImplants, [{value:true, text:"نعم"},{value:false, text:"لا"}]);
+                    formHtml += createSelectFormItemHTML("detail_imp_washer", "implantWasherAvailable", "هل تتوفر غسالة لأدوات الزراعة", imp.implantWasherAvailable, [{value:true, text:"نعم"},{value:false, text:"لا"}]);
+                    formHtml += `<h4 class="subsection-title col-span-full mt-3">الأطباء الذين يقومون بالزراعة (حتى 6)</h4>`;
+                    for(let i=0; i < 6; i++) {
+                        const doc = imp.implantDoctors?.[i] || {}; 
+                        formHtml += `<div class="form-item col-span-full grid grid-cols-1 md:grid-cols-4 gap-4 border-b pb-4 mb-4">
+                                        <div><label class="form-label text-sm">اسم الطبيب ${i+1}:</label><input type="text" name="implantDoctor_${i}_name" class="form-input" value="${doc.name || ''}"></div>
+                                        <div><label class="form-label text-sm">الاختصاص ${i+1}:</label><input type="text" name="implantDoctor_${i}_specialization" class="form-input" value="${doc.specialization || ''}"></div>
+                                        <div><label class="form-label text-sm">نوع Implant ${i+1}:</label><input type="text" name="implantDoctor_${i}_implantType" class="form-input" value="${doc.implantType || ''}"></div>
+                                        <div><label class="form-label text-sm">ترخيص الزراعة ${i+1}:</label><input type="text" name="implantDoctor_${i}_implantLicense" class="form-input" value="${doc.implantLicense || ''}"></div>
+                                     </div>`;
+                    }
+                    formHtml += `<div class="form-item col-span-full"><label for="detail_imp_notes" class="form-label">ملاحظات زراعة الأسنان:</label><textarea id="detail_imp_notes" name="notes" class="form-textarea">${imp.notes || ''}</textarea></div>`;
+                }
+                return formHtml;
+            }
+
+            if(saveDetailChangesButton && detailEditFormEl) {
+                saveDetailChangesButton.addEventListener('click', function() {
+                    if (!currentClinicId || !currentMainDetailSectionKey) { console.warn("Missing clinic ID or section key for saving."); return; }
+                    const clinicIndex = clinics.findIndex(c => c.id === currentClinicId);
+                    if (clinicIndex === -1) { console.error("Clinic not found for saving details."); return; }
+
+                    const formData = new FormData(detailEditFormEl);
+                    const clinicToUpdate = clinics[clinicIndex];
+                   
+                    if (!clinicToUpdate[currentMainDetailSectionKey]) {
+                        if (currentMainDetailSectionKey === 'infectionControl') clinicToUpdate[currentMainDetailSectionKey] = { clinicArea: {}, sterilizationRoom: {}, disinfection: {}, wasteDisposal: {}, notes: '' };
+                        else if (currentMainDetailSectionKey === 'staffInformation') clinicToUpdate[currentMainDetailSectionKey] = { doctorsTable: [], visitingDoctorsTable: [], nursingStaffTable: [], techniciansTable: [], staffNotes: '' };
+                        else if (currentMainDetailSectionKey === 'implants') clinicToUpdate[currentMainDetailSectionKey] = { implantDoctors: [], notes: '' };
+                        else if (currentMainDetailSectionKey === 'xrayRoom') clinicToUpdate[currentMainDetailSectionKey] = { xrayTypes: {}, notes: '' };
+                        else clinicToUpdate[currentMainDetailSectionKey] = {}; 
+                    }
+                    const mainDetailDataToUpdate = clinicToUpdate[currentMainDetailSectionKey];
+
+                    if (currentMainDetailSectionKey === 'staffInformation') {
+                        mainDetailDataToUpdate.doctorsCount = parseInt(formData.get('doctorsCount')) || 0;
+                        mainDetailDataToUpdate.visitingDoctorsCount = parseInt(formData.get('visitingDoctorsCount')) || 0;
+                        mainDetailDataToUpdate.nursingStaffCount = parseInt(formData.get('nursingStaffCount')) || 0;
+                        mainDetailDataToUpdate.techniciansCount = parseInt(formData.get('techniciansCount')) || 0;
+                        mainDetailDataToUpdate.staffNotes = formData.get('staffNotes');
+                       
+                        ['doctorsTable', 'visitingDoctorsTable', 'nursingStaffTable', 'techniciansTable'].forEach(tableKey => {
+                            mainDetailDataToUpdate[tableKey] = [];
+                            const count = tableKey === 'doctorsTable' ? 10 : (tableKey === 'visitingDoctorsTable' || tableKey === 'techniciansTable' ? 3 : 4);
+                            for(let i=0; i<count; i++) { 
+                                mainDetailDataToUpdate[tableKey].push({ 
+                                    name: formData.get(`${tableKey}_${i}_name`) || '', 
+                                    specialization: formData.get(`${tableKey}_${i}_specialization`) || '', 
+                                    licenseNumber: formData.get(`${tableKey}_${i}_licenseNumber`) || '', 
+                                    licenseIssueDate: formData.get(`${tableKey}_${i}_licenseIssueDate`) || '', 
+                                    licenseExpiryDate: formData.get(`${tableKey}_${i}_licenseExpiryDate`) || '' 
+                                }); 
+                            }
+                        });
+                    } else if (currentMainDetailSectionKey === 'infectionControl') {
+                        if (currentICSubSectionToEdit) { 
+                            if (!mainDetailDataToUpdate[currentICSubSectionToEdit]) mainDetailDataToUpdate[currentICSubSectionToEdit] = {};
+                            const subSectionDataToUpdate = mainDetailDataToUpdate[currentICSubSectionToEdit];
+                            subSectionDataToUpdate.notes = formData.get('notes') || subSectionDataToUpdate.notes; 
+
+                            if (currentICSubSectionToEdit === 'clinicArea') {
+                                subSectionDataToUpdate.environmentHygiene = formData.get('environmentHygiene');
+                                ['handWashing_washingFacilities', 'handWashing_dryingFacilities', 'handWashing_disinfectantHandRub', 
+                                 'protectiveBarriers_sterileGloves', 'protectiveBarriers_nonSterileGloves', 'protectiveBarriers_masks', 
+                                 'protectiveBarriers_coatOrGown', 'protectiveBarriers_glassesOrFaceShield', 'disposable_hve', 
+                                 'disposable_salivaEjectors', 'disposable_disposableCovers', 'disposable_cups', 'disposable_bib', 
+                                 'disposable_mirrors', 'disposable_impTrays', 'disposable_airWaterNozzles'].forEach(key => {
+                                    subSectionDataToUpdate[key] = formData.get(key) === 'true';
+                                 });
+                            } else if (currentICSubSectionToEdit === 'sterilizationRoom') {
+                                subSectionDataToUpdate.roomConfiguration = formData.get('roomConfiguration');
+                                subSectionDataToUpdate.autoclavesNumber = formData.get('autoclavesNumber');
+                                ['cleaning_manualWash', 'cleaning_ultrasonicMachine', 'cleaning_washerDisinfector', 
+                                 'drying_lintFreeTowels', 'drying_dryer', 'tests_biologicalTest', 
+                                 'tests_bdTest', 'tests_leakTest', 'tests_maintenanceReport'].forEach(key => {
+                                    subSectionDataToUpdate[key] = formData.get(key) === 'true';
+                                 });
+                            } else if (currentICSubSectionToEdit === 'disinfection') {
+                                ['surfaceDisinfection', 'impressionDisinfection', 'disinfectionContainer', 'disposableBags'].forEach(key => {
+                                    subSectionDataToUpdate[key] = formData.get(key) === 'true';
+                                 });
+                            } else if (currentICSubSectionToEdit === 'wasteDisposal') {
+                                ['infectiousWasteNonSharp', 'infectiousWasteSharp', 'nonInfectiousWaste'].forEach(key => {
+                                    subSectionDataToUpdate[key] = formData.get(key) === 'true';
+                                 });
+                            }
+                        } else { 
+                             mainDetailDataToUpdate.notes = formData.get('general_ic_notes') || mainDetailDataToUpdate.notes;
+                        }
+                    } else if (currentMainDetailSectionKey === 'dentalLab') {
+                        mainDetailDataToUpdate.type = formData.get('type');
+                        mainDetailDataToUpdate.environmentHygieneLab = formData.get('environmentHygieneLab');
+                        ['surfaceDisinfectionLab', 'impressionLab', 'appliancesLab', 'disinfectionContainerLab', 'disposableBagsLab'].forEach(key => {
+                            mainDetailDataToUpdate[key] = formData.get(key) === 'true';
+                        });
+                        mainDetailDataToUpdate.notes = formData.get('notes');
+                    } else if (currentMainDetailSectionKey === 'xrayRoom') {
+                        mainDetailDataToUpdate.environmentHygieneXray = formData.get('environmentHygieneXray');
+                        ['protectiveBarriersXray', 'surfacesDisinfectionXray', 'glovesXray', 'trashBasketXray', 'leadApronXray'].forEach(key => {
+                            mainDetailDataToUpdate[key] = formData.get(key) === 'true';
+                        });
+                        if(!mainDetailDataToUpdate.xrayTypes) mainDetailDataToUpdate.xrayTypes = {};
+                        ['paFixed', 'paMobile', 'opg', 'cephalometric', 'cbct'].forEach(key => {
+                            mainDetailDataToUpdate.xrayTypes[key] = formData.get(`xrayTypes_${key}`) === 'true';
+                        });
+                        mainDetailDataToUpdate.xrayTypes.rpdLicense = formData.get('xrayTypes_rpdLicense');
+                        mainDetailDataToUpdate.notes = formData.get('notes');
+                    } else if (currentMainDetailSectionKey === 'implants') {
+                        mainDetailDataToUpdate.performsImplants = formData.get('performsImplants') === 'true';
+                        mainDetailDataToUpdate.implantWasherAvailable = formData.get('implantWasherAvailable') === 'true';
+                        mainDetailDataToUpdate.implantDoctors = [];
+                        for(let i=0; i < 6; i++) {
+                            mainDetailDataToUpdate.implantDoctors.push({
+                                name: formData.get(`implantDoctor_${i}_name`) || '',
+                                specialization: formData.get(`implantDoctor_${i}_specialization`) || '',
+                                implantType: formData.get(`implantDoctor_${i}_implantType`) || '',
+                                implantLicense: formData.get(`implantDoctor_${i}_implantLicense`) || ''
+                            });
+                        }
+                        mainDetailDataToUpdate.notes = formData.get('notes');
+                    }
+
+                    displayUIMessage(detailFormMessage, "تم حفظ تعديلات القسم بنجاح!", "success");
+                    
+                    setTimeout(() => {
+                        if(detailFormMessage) {
+                            detailFormMessage.textContent = '';
+                            detailFormMessage.className = 'mt-4 text-center';
+                        }
+                        
+                        const clinicAfterSave = clinics.find(c => c.id === currentClinicId); 
+                        if (!clinicAfterSave) { console.error("Clinic data not found after save for UI refresh."); return; }
+
+                        if (currentMainDetailSectionKey === 'infectionControl') {
+                            showSection('infectionControlSection'); 
+                            populateInfectionControlDetails(clinicAfterSave.infectionControl); 
+
+                            if (currentICSubSectionToEdit) {
+                                let divIdToToggle = ''; 
+                                if(currentICSubSectionToEdit === 'clinicArea') divIdToToggle = 'clinicAreaDetails';
+                                else if(currentICSubSectionToEdit === 'sterilizationRoom') divIdToToggle = 'sterilizationRoomDetails';
+                                else if(currentICSubSectionToEdit === 'disinfection') divIdToToggle = 'disinfectionDetails';
+                                else if(currentICSubSectionToEdit === 'wasteDisposal') divIdToToggle = 'wasteDisposalDetails';
+                                
+                                if(divIdToToggle) {
+                                    const subSectionDivToRefresh = document.getElementById(divIdToToggle);
+                                    if (subSectionDivToRefresh) {
+                                        subSectionDivToRefresh.classList.remove('hidden'); // Ensure it's visible before toggling
+                                        toggleICSubSection(divIdToToggle, currentICSubSectionToEdit); 
+                                    }
+                                }
+                            }
+                        } else if (currentMainDetailSectionKey) { 
+                            const targetSectionId = currentMainDetailSectionKey + 'Section'; // e.g., 'staffInformationSection'
+                            showSection(targetSectionId); 
+
+                            if (targetSectionId === 'staffInformationSection' && staffInformationContent) {
+                                populateStaffInformationDetails(clinicAfterSave.staffInformation, staffInformationContent);
+                            } else if (targetSectionId === 'dentalLabSection' && dentalLabContent) {
+                                populateDentalLabDetails(clinicAfterSave.dentalLab, dentalLabContent);
+                            } else if (targetSectionId === 'xrayRoomSection' && xrayRoomContent) {
+                                populateXrayRoomDetails(clinicAfterSave.xrayRoom, xrayRoomContent);
+                            } else if (targetSectionId === 'implantsSection' && implantsContent) {
+                                populateImplantsDetails(clinicAfterSave.implants, implantsContent);
+                            }
+                        }
+                    }, 1500);
+                });
+            }
+
+            if(cancelDetailEditButton) {
+                cancelDetailEditButton.addEventListener('click', function() {
+                    if (!currentMainDetailSectionKey) {
+                        showSection('clinicProfileSection'); 
+                        if(currentClinicId) showClinicProfilePage(currentClinicId);
+                        return;
+                    }
+                    
+                    if(detailFormMessage) {
+                        detailFormMessage.textContent = '';
+                        detailFormMessage.className = 'mt-4 text-center';
+                    }
+
+                    const clinic = clinics.find(c => c.id === currentClinicId);
+                    if (!clinic) {
+                        showSection('dashboardSection'); 
+                        return;
+                    }
+
+                    if (currentMainDetailSectionKey === 'infectionControl') {
+                        showSection('infectionControlSection');
+                        populateInfectionControlDetails(clinic.infectionControl); 
+                        if (currentICSubSectionToEdit) {
+                            let divIdToToggle = '';
+                            if(currentICSubSectionToEdit === 'clinicArea') divIdToToggle = 'clinicAreaDetails';
+                            else if(currentICSubSectionToEdit === 'sterilizationRoom') divIdToToggle = 'sterilizationRoomDetails';
+                            else if(currentICSubSectionToEdit === 'disinfection') divIdToToggle = 'disinfectionDetails';
+                            else if(currentICSubSectionToEdit === 'wasteDisposal') divIdToToggle = 'wasteDisposalDetails';
+                            
+                            if(divIdToToggle) {
+                                const subSectionDivToRefresh = document.getElementById(divIdToToggle);
+                                if (subSectionDivToRefresh) {
+                                    subSectionDivToRefresh.classList.remove('hidden'); // Ensure it's visible before toggling
+                                    toggleICSubSection(divIdToToggle, currentICSubSectionToEdit); 
+                                }
+                            }
+                        }
+                    } else {
+                        const targetSectionId = currentMainDetailSectionKey + 'Section';
+                        showSection(targetSectionId);
+                        if (targetSectionId === 'staffInformationSection' && staffInformationContent) {
+                            populateStaffInformationDetails(clinic.staffInformation, staffInformationContent);
+                        } else if (targetSectionId === 'dentalLabSection' && dentalLabContent) {
+                            populateDentalLabDetails(clinic.dentalLab, dentalLabContent);
+                        } else if (targetSectionId === 'xrayRoomSection' && xrayRoomContent) {
+                            populateXrayRoomDetails(clinic.xrayRoom, xrayRoomContent);
+                        } else if (targetSectionId === 'implantsSection' && implantsContent) {
+                            populateImplantsDetails(clinic.implants, implantsContent);
+                        }
+                    }
+                });
+            }
+           
+            // --- Initial Setup ---
+            showSection('loginSection'); 
+        });
+    </script>
+</body>
+</html>
