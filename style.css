@@ -1,0 +1,192 @@
+/* --- المتغيرات العامة والألوان --- */
+:root {
+    --primary-color: #005A9C;
+    --border-color: #D1D5DB;
+    --background-color: #F9FAFB;
+    --text-color: #1F2937;
+    --text-light-color: #6B7280;
+    --edit-color: #F59E0B;
+    --save-color: #10B981;
+    --cancel-color: #6B7280;
+    --print-color: #4f46e5;
+    --font-family: 'Cairo', sans-serif;
+}
+
+/* --- التنسيقات العامة --- */
+body {
+    margin: 0;
+    font-family: var(--font-family);
+    background-color: var(--background-color);
+    color: var(--text-color);
+    direction: rtl;
+}
+
+.page-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    padding-bottom: 80px; /* مساحة للشريط السفلي */
+    box-sizing: border-box;
+}
+
+.page-container.main-content {
+    justify-content: flex-start;
+}
+
+#login-page.page-container {
+    justify-content: center;
+    padding: 1rem;
+}
+
+/* --- تنسيقات البطاقات العامة --- */
+.card {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    width: 100%;
+}
+
+.login-card {
+    padding: 2.5rem;
+    max-width: 400px;
+    text-align: center;
+}
+
+.card h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+}
+
+.card p {
+    color: var(--text-light-color);
+    margin-bottom: 2rem;
+}
+
+/* --- تنسيقات الفورم --- */
+.input-group { text-align: right; margin-bottom: 1.5rem; }
+.input-group label { display: block; font-weight: 600; margin-bottom: 0.5rem; }
+.input-group input {
+    width: 100%; padding: 0.75rem; border: 1px solid var(--border-color);
+    border-radius: 6px; font-size: 1rem; box-sizing: border-box;
+}
+
+/* --- تنسيقات الأزرار العامة --- */
+.action-button {
+    display: block; width: 100%; padding: 0.85rem; font-size: 1rem;
+    font-weight: 600; color: white; border-radius: 6px;
+    cursor: pointer; text-decoration: none; transition: background-color 0.2s;
+    border: none; text-align: center; margin-top: 1.5rem;
+}
+.primary-button { background-color: var(--primary-color); }
+.primary-button:hover { background-color: #004a80; }
+.edit-button { background-color: var(--edit-color); }
+.edit-button:hover { background-color: #D97706; }
+.save-button { background-color: var(--save-color); }
+.save-button:hover { background-color: #059669; }
+.cancel-button { background-color: var(--cancel-color); }
+.cancel-button:hover { background-color: #4B5563; }
+
+/* --- تنسيقات الصفحات الداخلية --- */
+.page-header {
+    width: 100%; max-width: 900px; padding: 1.5rem 2rem 1rem;
+    box-sizing: border-box; display: flex; justify-content: space-between;
+    align-items: center; border-bottom: 1px solid var(--border-color); background-color: white;
+}
+.page-header h1 { margin: 0; font-size: 1.5rem; }
+.header-actions { display: flex; align-items: center; gap: 0.75rem; }
+.back-button, .print-button {
+    background: none; border: 1px solid var(--border-color); color: var(--text-color);
+    padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer;
+    text-decoration: none; font-size: 0.9rem; transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+    display: flex; align-items: center; gap: 0.5rem;
+}
+.back-button:hover { background-color: #f0f0f0; }
+.print-button { background-color: var(--print-color); border-color: var(--print-color); color: white; }
+.print-button:hover { background-color: #4338ca; }
+
+.content-area {
+    width: 100%; max-width: 900px; padding: 2rem; box-sizing: border-box;
+    flex-grow: 1;
+}
+
+/* --- تنسيقات شريط التنقل السفلي --- */
+.bottom-nav {
+    background-color: white; width: 100%; position: fixed; bottom: 0;
+    left: 0; right: 0; display: flex; justify-content: space-around;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1); padding: 0.5rem 0;
+}
+.nav-button {
+    background-color: transparent; border: none; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; padding: 0.5rem;
+    color: var(--text-light-color); font-family: var(--font-family); font-size: 0.75rem;
+    font-weight: 600; transition: color 0.2s; width: 80px; text-decoration: none;
+}
+.nav-button:hover { color: var(--primary-color); }
+.nav-button svg { width: 24px; height: 24px; margin-bottom: 4px; fill: currentColor; }
+.nav-button.active { color: var(--primary-color); }
+
+/* --- تنسيقات صفحة قائمة العيادات --- */
+.clinics-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
+.clinic-card-link { text-decoration: none; color: inherit; }
+.clinic-item-card {
+    background-color: white; border: 1px solid var(--border-color);
+    border-radius: 8px; padding: 1.5rem; text-align: right; cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+.clinic-item-card:hover { transform: translateY(-5px); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+.clinic-item-card h3 { margin: 0 0 0.5rem 0; font-size: 1.1rem; color: var(--primary-color); }
+.clinic-item-card p { margin: 0; font-size: 0.9rem; color: var(--text-light-color); }
+
+/* --- تنسيقات صفحة تفاصيل العيادة --- */
+.details-card { margin-bottom: 1.5rem; padding: 0; border: 1px solid var(--border-color); }
+.details-card .card-header {
+    padding: 1rem 1.5rem; margin: 0; font-size: 1.2rem;
+    border-bottom: 1px solid var(--border-color); background-color: #f9fafb;
+}
+.details-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr);
+    gap: 1rem 2rem; padding: 1.5rem;
+}
+.details-grid-single { display: grid; grid-template-columns: 1fr; }
+.detail-item { display: flex; flex-direction: column; padding: 1rem 1.5rem; }
+.details-grid-single .detail-item:not(:last-child) { border-bottom: 1px solid #eee; }
+.details-grid .detail-item { padding: 1rem 0; border-bottom: none; }
+.detail-item label { font-size: 0.8rem; font-weight: 600; color: var(--text-light-color); margin-bottom: 0.25rem; }
+.detail-item span { font-size: 1rem; font-weight: 500; color: var(--text-color); }
+.detail-item.full-width { grid-column: 1 / -1; }
+
+.subsection-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1rem; padding: 1.5rem;
+}
+.subsection-button {
+    background-color: var(--background-color); border: 1px solid var(--border-color);
+    border-radius: 8px; padding: 1.5rem 1rem; text-align: center;
+    cursor: pointer; text-decoration: none; color: var(--text-color);
+    font-weight: 600; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 0.75rem;
+    transition: transform 0.2s, box-shadow 0.2s, color 0.2s;
+}
+.subsection-button:hover {
+    transform: translateY(-5px); box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    color: var(--primary-color);
+}
+.subsection-button svg { color: var(--primary-color); }
+.notes-content { padding: 1.5rem; color: var(--text-light-color); line-height: 1.6; font-size: 0.95rem; }
+.form-card { background-color: white; padding: 2rem; border-radius: 8px; border: 1px solid var(--border-color); }
+.button-group { display: flex; gap: 1rem; margin-top: 2rem; }
+
+/* --- تنسيقات الجداول --- */
+.card-content { padding: 1.5rem; overflow-x: auto; }
+table {
+    width: 100%; border-collapse: collapse;
+    margin-bottom: 1.5rem; font-size: 0.9rem;
+}
+th, td { padding: 0.75rem 1rem; text-align: right; border: 1px solid var(--border-color); }
+thead th { background-color: #f9fafb; font-size: 0.85rem; font-weight: 600; color: var(--text-light-color); }
+tbody tr:nth-child(even) { background-color: #f9fafb; }
+tbody tr:hover { background-color: #f3f4f6; }
+.summary-item { margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color); font-size: 1.1rem; font-weight: 600; }

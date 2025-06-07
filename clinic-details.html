@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تفاصيل العيادة - نظام العيادات</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    
+    <main class="page-container main-content">
+        <div class="page-header">
+            <h1>تفاصيل عيادة الأمل</h1>
+            <div class="header-actions">
+                <a href="clinics.html" class="back-button">&larr; رجوع إلى القائمة</a>
+                <button id="print-button" class="print-button">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                      <path fill-rule="evenodd" d="M7.875 1.5C6.839 1.5 6 2.34 6 3.375v2.25c0 1.036.84 1.875 1.875 1.875h8.25c1.035 0 1.875-.84 1.875-1.875v-2.25C18 2.34 17.16 1.5 16.125 1.5H7.875zM6 9.75A2.25 2.25 0 003.75 12v6A2.25 2.25 0 006 20.25h12A2.25 2.25 0 0020.25 18v-6A2.25 2.25 0 0018 9.75H6zM12 11.25a.75.75 0 01.75.75v3a.75.75 0 01-1.5 0v-3a.75.75 0 01.75-.75z" clip-rule="evenodd" />
+                    </svg>
+                    <span>طباعة</span>
+                </button>
+            </div>
+        </div>
+        
+        <div class="content-area">
+            
+            <section class="card details-card">
+                <h2 class="card-header">المعلومات العامة</h2>
+                <div class="details-grid">
+                    <div class="detail-item"><label>اسم العيادة</label><span>عيادة الأمل</span></div>
+                    <div class="detail-item"><label>العنوان</label><span>شارع النجاح، مبنى 5، الكويت</span></div>
+                    <div class="detail-item"><label>رقم الهاتف</label><span>22334455</span></div>
+                    <div class="detail-item"><label>تاريخ الزيارة</label><span>08-06-2025</span></div>
+                    <div class="detail-item"><label>التصنيف</label><span>عيادة اسنان</span></div>
+                    <div class="detail-item"><label>القسم</label><span>عيادة خاصة</span></div>
+                    <div class="detail-item full-width"><label>بيانات الزيارة</label><span>رقم الزيارة: 1 | اليوم: الأحد | التاريخ: 08-06-2025</span></div>
+                </div>
+            </section>
+
+            <section class="card details-card">
+                <h2 class="card-header">أقسام التقييم</h2>
+                <div class="subsection-grid">
+                    <a href="staff-information.html" class="subsection-button">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="32" height="32"><path d="M4.5 6.375a.75.75 0 01.75-.75h9a.75.75 0 010 1.5h-9a.75.75 0 01-.75-.75zM4.5 10.125a.75.75 0 01.75-.75h9a.75.75 0 010 1.5h-9a.75.75 0 01-.75-.75zM4.5 13.875a.75.75 0 01.75-.75h9a.75.75 0 010 1.5h-9a.75.75 0 01-.75-.75zM16.5 5.25a.75.75 0 01.75.75v12a.75.75 0 01-1.5 0v-12a.75.75 0 01.75-.75z" /></svg>
+                        <span>معلومات الطاقم</span>
+                    </a>
+                    <a href="dental-clinic-checklist.html" class="subsection-button">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="32" height="32"><path d="M11.25 4.533A9.707 9.707 0 006 3a9.735 9.735 0 00-3.25.555.75.75 0 00-.5.707v14.25a.75.75 0 001 .707A9.735 9.735 0 006 21a9.707 9.707 0 005.25-1.533" /><path d="M12.75 4.533A9.707 9.707 0 0118 3a9.735 9.735 0 013.25.555.75.75 0 01.5.707v14.25a.75.75 0 01-1 .707A9.735 9.735 0 0118 21a9.707 9.707 0 01-5.25-1.533" /></svg>
+                        <span>تقييم العيادة</span>
+                    </a>
+                    <a href="sterilization-checklist.html" class="subsection-button">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="32" height="32"><path fill-rule="evenodd" d="M3 6a3 3 0 013-3h12a3 3 0 013 3v12a3 3 0 01-3 3H6a3 3 0 01-3-3V6zm4.5 9a1.5 1.5 0 100-3 1.5 1.5 0 000 3zM12 15a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm4.5 0a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm-9-4.5a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0z" clip-rule="evenodd" /></svg>
+                        <span>غرفة التعقيم</span>
+                    </a>
+                     <a href="disinfection-checklist.html" class="subsection-button">
+                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="32" height="32"><path fill-rule="evenodd" d="M11.123 2.372a.75.75 0 01.754 0l8.25 4.5a.75.75 0 01.423.658v10.452a.75.75 0 01-.423.658l-8.25 4.5a.75.75 0 01-.754 0l-8.25-4.5a.75.75 0 01-.423-.658V7.53a.75.75 0 01.423-.658l8.25-4.5zM12.75 6.31v4.44a.75.75 0 001.5 0V6.52l5.445 2.972v5.99l-7.307 3.988-7.307-3.988v-5.99L11.25 6.52V10.75a.75.75 0 001.5 0V6.31z" clip-rule="evenodd" /></svg>
+                         <span>التطهير والنفايات</span>
+                    </a>
+                    <a href="auxiliary-services.html" class="subsection-button">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="32" height="32"><path fill-rule="evenodd" d="M14.615 1.585a.75.75 0 01.707.023l6 4.5a.75.75 0 01-.023 1.292L14.25 10.5h-4.5l-7.049-3.112a.75.75 0 01-.023-1.292l6-4.5a.75.75 0 01.707-.023zM14.25 12l7.049 3.112a.75.75 0 01.023 1.292l-6 4.5a.75.75 0 01-.707.023l-6-4.5a.75.75 0 01.023-1.292L9.75 12h4.5z" clip-rule="evenodd" /></svg>
+                        <span>الخدمات المساعدة</span>
+                    </a>
+                    <a href="implants-checklist.html" class="subsection-button">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="32" height="32"><path d="M12 15a.75.75 0 01.75.75V18a.75.75 0 01-1.5 0v-2.25A.75.75 0 0112 15z" /><path fill-rule="evenodd" d="M8.285 3.692a.75.75 0 01.884-.092l.107.061 6.09 3.516a.75.75 0 01.385.648v7.168a.75.75 0 01-.385.648l-6.09 3.516a.75.75 0 01-.991-.86l1.246-5.234-1.246-5.234a.75.75 0 01.107-.972zM9.035 8.92l.983 4.129a.75.75 0 010 .402l-.983 4.129 4.91-2.835a.75.75 0 00.385-.648V9.89a.75.75 0 00-.385-.648L9.035 8.92z" clip-rule="evenodd" /></svg>
+                        <span>زراعة الأسنان</span>
+                    </a>
+                    <a href="treatment-plan-checklist.html" class="subsection-button">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="32" height="32"><path fill-rule="evenodd" d="M2.25 4.5A2.25 2.25 0 014.5 2.25h15A2.25 2.25 0 0121.75 4.5v15A2.25 2.25 0 0119.5 21.75h-15A2.25 2.25 0 012.25 19.5v-15zm8.25 4.5a.75.75 0 01.75-.75h4.5a.75.75 0 010 1.5h-4.5a.75.75 0 01-.75-.75zM10.5 12a.75.75 0 01.75-.75h4.5a.75.75 0 010 1.5h-4.5a.75.75 0 01-.75-.75zM10.5 15a.75.75 0 01.75-.75h4.5a.75.75 0 010 1.5h-4.5a.75.75 0 01-.75-.75zM6 9a.75.75 0 000 1.5h.008a.75.75 0 000-1.5H6zM6 12a.75.75 0 000 1.5h.008a.75.75 0 000-1.5H6zM6 15a.75.75 0 000 1.5h.008a.75.75 0 000-1.5H6z" clip-rule="evenodd" /></svg>
+                        <span>خطة العلاج</span>
+                    </a>
+                     <a href="all-notes.html" class="subsection-button">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="32" height="32"><path d="M5.625 1.5c-1.036 0-1.875.84-1.875 1.875v17.25c0 1.035.84 1.875 1.875 1.875h12.75c1.035 0 1.875-.84 1.875-1.875V12.75A3.75 3.75 0 0018.75 9h-7.5A2.25 2.25 0 019 6.75V1.5H5.625z" /><path d="M12.75 1.5v5.25c0 .414.336.75.75.75h5.25a.75.75 0 000-1.5h-4.5a.75.75 0 01-.75-.75V1.5a.75.75 0 00-1.5 0z" /></svg>
+                        <span>الملاحظات المجمعة</span>
+                    </a>
+                    <a href="attachments.html" class="subsection-button">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="32" height="32"><path fill-rule="evenodd" d="M18.97 3.659a2.25 2.25 0 00-3.182 0l-10.94 10.94a2.75 2.75 0 105.5 0l4.9-4.9a1.75 1.75 0 10-3.5 0l-4.9 4.9a.25.25 0 000 .5l10.94-10.94a.75.75 0 111.061 1.061l-10.94 10.94a1.25 1.25 0 11-2.5 0l4.9-4.9a3.25 3.25 0 016.5 0l-4.9 4.9a4.25 4.25 0 01-8.5 0L15.79 3.66a.75.75 0 011.061 0l2.121 2.121a.75.75 0 010 1.061l-2.12 2.12a.75.75 0 11-1.06-1.061l2.12-2.121a.75.75 0 010-1.061z" clip-rule="evenodd" /></svg>
+                        <span>المرفقات</span>
+                    </a>
+                </div>
+            </section>
+        </div>
+    </main>
+    
+    <nav class="bottom-nav">
+        <a href="dashboard.html" class="nav-button">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24"><path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z" clip-rule="evenodd" /></svg>
+            <span>الملف الشخصي</span>
+        </a>
+        <a href="clinics.html" class="nav-button active">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24"><path fill-rule="evenodd" d="M4.5 2.25a.75.75 0 000 1.5v16.5a.75.75 0 00.75.75h13.5a.75.75 0 00.75-.75V3.75a.75.75 0 000-1.5h-15zM9 6a.75.75 0 000 1.5h.008a.75.75 0 000-1.5H9zm.75 3.75a.75.75 0 01.75-.75h4.5a.75.75 0 010 1.5h-4.5a.75.75 0 01-.75-.75zM9 12.75a.75.75 0 000 1.5h.008a.75.75 0 000-1.5H9z" clip-rule="evenodd" /></svg>
+            <span>العيادات</span>
+        </a>
+    </nav>
+</body>
+</html>
