@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المرفقات - نظام العيادات</title>
+    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="clinic-details-page.css">
+</head>
+<body>
+    <main class="page-container main-content">
+        <div class="page-header">
+            <h1 id="checklist-page-title">المرفقات</h1>
+            <a id="back-to-details-link" href="#" class="back-button">&larr; رجوع إلى تفاصيل العيادة</a>
+        </div>
+        <div id="attachments-content" class="content-area">
+            <section class="card details-card">
+                <h2 class="card-header">إضافة مرفق جديد</h2>
+                <div class="card-content">
+                    <form id="upload-form">
+                        <div class="input-group">
+                            <label for="file-upload">اختر ملف (صورة, PDF, ...)</label>
+                            <input type="file" id="file-upload" class="file-input">
+                        </div>
+                        <button type="submit" class="action-button primary-button">رفع الملف</button>
+                        <p class="text-light-color" style="font-size: 0.8rem; text-align: center; margin-top: 1rem;">ملاحظة: سيتم حفظ اسم الملف فقط.</p>
+                    </form>
+                </div>
+            </section>
+            <section class="card details-card">
+                <h2 class="card-header">الملفات المرفقة</h2>
+                <div id="attachments-grid" class="attachments-grid">
+                    <p>جاري تحميل المرفقات...</p>
+                </div>
+            </section>
+        </div>
+    </main>
+    <nav class="bottom-nav"></nav>
+    <script src="data.js"></script>
+    <script src="attachments-page.js"></script>
+</body>
+</html>

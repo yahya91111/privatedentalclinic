@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>طباعة تقرير شامل</title>
+    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="print-report.css">
+    <link rel="stylesheet" href="staff-information-page.css">
+    <link rel="stylesheet" href="dental-clinic-checklist-page.css">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        @media print {
+            @page { size: A4; margin: 1.5cm; }
+            body { background-color: white !important; font-size: 10pt; color: black !important; -webkit-print-color-adjust: exact; color-adjust: exact; }
+            .print-header { display: none !important; }
+            main.page-container, .content-area { padding: 0 !important; margin: 0 !important; max-width: 100%; }
+            .card.details-card { box-shadow: none !important; border: 1px solid #aaa; margin-bottom: 25px; }
+            .print-section-container { page-break-after: always; }
+            .print-section-container:last-child { page-break-after: avoid; }
+            h1.report-main-title { text-align: center; font-size: 20pt; border-bottom: 3px double black; padding-bottom: 10px; page-break-after: always; }
+        }
+    </style>
+</head>
+<body>
+    <main class="page-container main-content">
+        <div class="page-header print-header">
+            <h1 id="report-title">تجميع التقرير...</h1>
+            <button onclick="window.print()" class="action-button print-button">اطبع الآن</button>
+        </div>
+        <div id="report-content" class="content-area">
+            <h1 id="report-main-title" class="report-main-title"></h1>
+            <div class="print-section-container" id="print-general-info"></div>
+            <div class="print-section-container" id="print-staff-info"></div>
+            <div class="print-section-container" id="print-dental-checklist"></div>
+            <div class="print-section-container" id="print-sterilization-checklist"></div>
+            <div class="print-section-container" id="print-disinfection-checklist"></div>
+            <div class="print-section-container" id="print-auxiliary-services"></div>
+            <div class="print-section-container" id="print-implants-checklist"></div>
+            <div class="print-section-container" id="print-treatment-plan"></div>
+            <div class="print-section-container" id="print-all-notes"></div>
+        </div>
+    </main>
+
+    <script src="data.js"></script>
+    <script src="render-functions.js"></script>
+    <script src="print-report.js"></script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تعديل العيادة - نظام العيادات</title>
+    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="add-clinic-page.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <main class="page-container main-content">
+        <div class="page-header">
+            <h1 id="edit-page-title">تعديل بيانات العيادة</h1>
+            <a id="cancel-edit-link" href="#" class="back-button">&larr; إلغاء</a>
+        </div>
+        <div class="content-area">
+            <div class="form-card">
+                <form id="edit-clinic-form">
+                    <div id="edit-form-container" class="card-content">
+                        <p>جاري تحميل البيانات...</p>
+                    </div>
+                    <div class="button-group">
+                        <button type="submit" class="action-button save-button">حفظ التعديلات</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+    <nav class="bottom-nav"></nav>
+    <script src="data.js"></script>
+    <script src="edit-page.js"></script>
+</body>
+</html>

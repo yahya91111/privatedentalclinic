@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إضافة مستخدم جديد - نظام العيادات</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    
+    <main class="page-container main-content">
+        <div class="page-header">
+            <h1>إضافة مستخدم جديد</h1>
+            <a href="dashboard.html" class="back-button">&larr; رجوع إلى لوحة التحكم</a>
+        </div>
+        
+        <div class="content-area">
+            <div class="form-card">
+                <form>
+                    <div class="input-group">
+                        <label for="full-name">الاسم الكامل</label>
+                        <input type="text" id="full-name" placeholder="مثال: صالح الأحمد">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="email">البريد الإلكتروني</label>
+                        <input type="email" id="email" placeholder="example@domain.com">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="password">كلمة المرور</label>
+                        <input type="password" id="password">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="user-role">الدور (الصلاحية)</label>
+                        <select id="user-role">
+                            <option value="admin">مدير عام</option>
+                            <option value="manager">مدير</option>
+                            <option value="inspector">طبيب / مفتش</option>
+                        </select>
+                    </div>
+
+                    <div class="button-group">
+                        <button type="submit" class="action-button save-button">إضافة المستخدم</button>
+                        <a href="dashboard.html" class="action-button cancel-button">إلغاء</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+    
+    <nav class="bottom-nav">
+        </nav>
+
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إضافة عيادة جديدة - نظام العيادات</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="add-clinic-page.css">
+</head>
+<body>
+    <main class="page-container main-content">
+        <div class="page-header">
+            <h1>إضافة عيادة جديدة</h1>
+            <a href="clinics.html" class="back-button">&larr; رجوع إلى القائمة</a>
+        </div>
+        <div class="content-area">
+            <div class="form-card">
+                <form id="add-clinic-form">
+                    <div class="input-group">
+                        <label for="clinic-name">اسم العيادة</label>
+                        <input type="text" id="clinic-name" name="clinic-name" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="clinic-address">العنوان</label>
+                        <input type="text" id="clinic-address" name="clinic-address">
+                    </div>
+                    <div class="input-group">
+                        <label for="clinic-phone">الهاتف</label>
+                        <input type="tel" id="clinic-phone" name="clinic-phone">
+                    </div>
+                    <div class="input-group">
+                        <label for="clinic-license">صاحب الرخصة</label>
+                        <input type="text" id="clinic-license" name="clinic-license">
+                    </div>
+                    <div class="input-group">
+                        <label for="clinic-classification">تصنيف الترخيص</label>
+                        <select id="clinic-classification" name="clinic-classification">
+                            <option value="مستشفى">مستشفى</option>
+                            <option value="مستوصف">مستوصف</option>
+                            <option value="مركز">مركز</option>
+                            <option value="عيادة خاصة">عيادة خاصة</option>
+                            <option value="مختبر">مختبر</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="clinic-category">الفئة الرئيسية</label>
+                        <select id="clinic-category" name="clinic-category">
+                            <option value="private_hospital">مستشفى خاص</option>
+                            <option value="private_polyclinic">مستوصف خاص</option>
+                            <option value="private_clinic">عيادة خاصة</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="action-button save-button">حفظ العيادة</button>
+                </form>
+            </div>
+        </div>
+    </main>
+    <nav class="bottom-nav">
+        <a href="dashboard.html" class="nav-button">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24"><path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z" clip-rule="evenodd" /></svg>
+            <span>الملف الشخصي</span>
+        </a>
+        <a href="clinics.html" class="nav-button active">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24"><path fill-rule="evenodd" d="M4.5 2.25a.75.75 0 000 1.5v16.5a.75.75 0 00.75.75h13.5a.75.75 0 00.75-.75V3.75a.75.75 0 000-1.5h-15zM9 6a.75.75 0 000 1.5h.008a.75.75 0 000-1.5H9zm.75 3.75a.75.75 0 01.75-.75h4.5a.75.75 0 010 1.5h-4.5a.75.75 0 01-.75-.75zM9 12.75a.75.75 0 000 1.5h.008a.75.75 0 000-1.5H9z" clip-rule="evenodd" /></svg>
+            <span>العيادات</span>
+        </a>
+    </nav>
+    <script src="data.js"></script>
+    <script src="add-clinic-page.js"></script>
+</body>
+</html>

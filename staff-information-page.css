@@ -1,0 +1,78 @@
+/* تنسيقات حقول الإدخال داخل الجداول في وضع التعديل */
+.table-input {
+    width: 100%;
+    padding: 0.5rem;
+    font-size: 0.9rem;
+    font-family: inherit;
+    color: var(--text-color);
+    border: 1px solid var(--primary-color);
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.notes-textarea {
+    width: 100%;
+    min-height: 150px;
+    padding: 0.75rem;
+    font-size: 0.95rem;
+    font-family: inherit;
+    color: var(--text-color);
+    border: 1px solid var(--primary-color);
+    border-radius: 6px;
+    box-sizing: border-box;
+    resize: vertical;
+}
+
+/* === التنسيق الجديد لقسم الملاحظات === */
+.notes-content {
+    padding: 1rem;
+    background-color: #f9fafb;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    min-height: 100px;
+}
+
+.notes-content p {
+    margin: 0;
+    line-height: 1.6;
+    color: var(--text-light-color);
+}
+/* =================================================================== */
+/* 1. شق العناوين (رأس الصفحة وعناوين البطاقات) */
+/* =================================================================== */
+
+/* هذا الكود يتجاوز التنسيق العام ويطبق فقط على هذه الصفحة */
+.page-header {
+    background-color: #065F46; /* أخضر غامق */
+    color: white;
+    border-bottom: 1px solid #064E3B;
+}
+.page-header h1 {
+    color: white;
+}
+.page-header .back-button {
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+}
+.page-header .back-button:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* --- تصميم عناوين البطاقات (الجديد) --- */
+.details-card .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* --- تم تطبيق التصميم الذي طلبته --- */
+    background-color: white; 
+    color: #065f46; 
+    padding: 0.8rem 1.5rem;
+    margin: 0;
+    border-radius: 8px 8px 0 0; /* لجعل الحواف العلوية فقط دائرية */
+    border: 1px solid var(--border-color);
+    border-right: 5px solid var(--save-color);
+    font-size: 1.2rem;
+    font-weight: 700;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}

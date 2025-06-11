@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم - نظام العيادات</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <main class="page-container main-content">
+        <div class="page-header">
+            <h1>ملفي الشخصي</h1>
+            <span class="header-role">صلاحيات: طبيب / مفتش</span>
+        </div>
+        <div class="content-area">
+            <section class="card details-card">
+                <h2 class="card-header">معلومات المفتش</h2>
+                <div class="details-grid">
+                    <div class="detail-item"><label>الاسم</label><span>د. علي حسن</span></div>
+                    <div class="detail-item"><label>المسمى الوظيفي</label><span>طبيب أسنان - مفتش</span></div>
+                    <div class="detail-item"><label>البريد الإلكتروني</label><span>ali.hassan@example.com</span></div>
+                    <div class="detail-item"><label>رقم الهاتف</label><span>98765432</span></div>
+                </div>
+                <div class="card-actions">
+                    <a href="#" class="action-button-card edit-button">تعديل الملف الشخصي</a>
+                    <a href="change-password.html" class="action-button-card">تغيير كلمة المرور</a>
+                </div>
+            </section>
+            <section class="card details-card">
+                <h2 class="card-header">العيادات المخصصة لي</h2>
+                <div class="clinics-grid card-content">
+                    <a href="clinic-details.html" class="clinic-card-link"><div class="clinic-item-card"><h3>مستشفى الأمل الدولي</h3><p>مدينة الكويت - شارع الخليج</p></div></a>
+                    <a href="clinic-details.html" class="clinic-card-link"><div class="clinic-item-card"><h3>مستوصف الشفاء الأهلي</h3><p>السالمية - قطعة 4</p></div></a>
+                </div>
+            </section>
+        </div>
+    </main>
+    <nav class="bottom-nav">
+        <a href="doctor-dashboard.html" class="nav-button active">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24"><path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z" clip-rule="evenodd" /></svg>
+            <span>ملفي الشخصي</span>
+        </a>
+        <a href="clinics.html" class="nav-button">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24"><path fill-rule="evenodd" d="M4.5 2.25a.75.75 0 000 1.5v16.5a.75.75 0 00.75.75h13.5a.75.75 0 00.75-.75V3.75a.75.75 0 000-1.5h-15zM9 6a.75.75 0 000 1.5h.008a.75.75 0 000-1.5H9zm.75 3.75a.75.75 0 01.75-.75h4.5a.75.75 0 010 1.5h-4.5a.75.75 0 01-.75-.75zM9 12.75a.75.75 0 000 1.5h.008a.75.75 0 000-1.5H9z" clip-rule="evenodd" /></svg>
+            <span>العيادات</span>
+        </a>
+    </nav>
+    <script src="data.js"></script>
+    <script src="doctor-dashboard.js"></script> </body>
+</html>

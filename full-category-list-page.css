@@ -1,0 +1,75 @@
+/* =================================================================== */
+/* 4. بطاقات العيادات (Clinic Cards) - تصميم بالأخضر */
+/* =================================================================== */
+.clinics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+.clinic-card-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    height: 100%;
+}
+.clinic-item-card {
+    background-color: white; /* --- سنبقي على الخلفية البيضاء النظيفة --- */
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 0; 
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.03);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+.clinic-item-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.07);
+    border-color: var(--save-color); /* حد أخضر عند المرور */
+}
+
+/* --- تصميم اسم العيادة داخل إطار --- */
+.clinic-card-title-frame {
+    background-color: var(--save-color); /* --- تم التعديل: أخضر احترافي --- */
+    color: white; /* --- تم التعديل: نص أبيض ليبرز --- */
+    padding: 1rem 1.25rem;
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 700;
+}
+.clinic-card-phone {
+    padding: 0.75rem 1.25rem 0;
+    margin: 0;
+    font-size: 1rem;
+    color: var(--text-light-color);
+}
+
+/* --- تصميم إطار الإحصائيات داخل البطاقة --- */
+.clinic-card-stats {
+    display: flex;
+    background-color: #F0FDF4; /* --- تم التعديل: أخضر فاتح جداً --- */
+    border-top: 1px solid #BBF7D0; /* --- تم التعديل: حد بلون أخضر أفتح --- */
+    margin-top: 1rem;
+    padding: 0.75rem 1.25rem;
+}
+.stat-item {
+    flex: 1;
+    text-align: center;
+}
+.stat-item:first-child {
+    border-left: 1px solid #BBF7D0; /* --- تم التعديل: حد بلون أخضر أفتح --- */
+}
+.stat-item label {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--text-light-color);
+    margin-bottom: 0.25rem;
+}
+.stat-item span {
+    font-weight: 600;
+    font-size: 0.9rem;
+}

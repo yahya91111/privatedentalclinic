@@ -1,0 +1,305 @@
+/* =================================================================== */
+/* 1. المتغيرات العامة والألوان */
+/* =================================================================== */
+:root {
+    --primary-color: #3B82F6; /* أزرق مشرق وحيوي */
+    --primary-color-light: #DBEAFE; /* درجة فاتحة متناسقة */
+    --save-color: #10B981;
+    --edit-color: #F59E0B;
+    --delete-color: #ef4444;
+    --print-color: #8B5CF6; /* بنفسجي مفعم بالحياة */
+    --cancel-color: #6B7280;
+    --border-color: #E5E7EB;
+    --background-color: #F9FAFB;
+    --text-color: #111827;
+    --text-light-color: #6B7280;
+    --font-family: 'Cairo', sans-serif;
+}
+
+
+/* =================================================================== */
+/* 2. التنسيقات العامة والأساسية (Reset) */
+/* =================================================================== */
+body {
+    margin: 0;
+    font-family: var(--font-family);
+    background-color: var(--background-color);
+    color: var(--text-color);
+    direction: rtl;
+}
+
+/* =================================================================== */
+/* 3. هيكل وتخطيط الصفحة */
+/* =================================================================== */
+.page-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    padding-bottom: 80px;
+    box-sizing: border-box;
+}
+.page-container.main-content {
+    justify-content: flex-start;
+}
+#login-page.page-container {
+    justify-content: center;
+    padding: 1rem;
+}
+.page-header {
+    width: 100%;
+    max-width: 900px;
+    padding: 1.5rem 2rem;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: white;
+    border-bottom: 1px solid var(--border-color);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+.page-header h1 {
+    margin: 0;
+    font-size: 1.75rem;
+}
+.content-area {
+    width: 100%;
+    max-width: 900px;
+    padding: 2rem;
+    box-sizing: border-box;
+    flex-grow: 1;
+}
+
+/* =================================================================== */
+/* 4. شريط التنقل السفلي */
+/* =================================================================== */
+.bottom-nav {
+    background-color: white;
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-around;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+    padding: 0.5rem 0;
+}
+.nav-button {
+    background-color: transparent;
+    border: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
+    color: var(--text-light-color);
+    font-family: var(--font-family);
+    font-size: 0.75rem;
+    font-weight: 600;
+    transition: color 0.2s;
+    width: 80px;
+    text-decoration: none;
+}
+.nav-button:hover { color: var(--primary-color); }
+.nav-button svg { width: 24px; height: 24px; margin-bottom: 4px; fill: currentColor; }
+.nav-button.active { color: var(--primary-color); }
+
+/* =================================================================== */
+/* 5. البطاقات (Cards) */
+/* =================================================================== */
+.card {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.05);
+    width: 100%;
+    border: 1px solid var(--border-color);
+}
+.login-card { padding: 2.5rem; max-width: 400px; text-align: center; }
+.card h1 { font-size: 1.75rem; font-weight: 700; margin-top: 0; margin-bottom: 0.5rem; }
+.card p { color: var(--text-light-color); margin-bottom: 2rem; }
+
+
+/* =================================================================== */
+/* 6. النماذج وحقول الإدخال (Forms & Inputs) */
+/* =================================================================== */
+.form-card {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+.input-group { text-align: right; margin-bottom: 1.5rem; }
+.input-group label { display: block; font-weight: 600; margin-bottom: 0.5rem; }
+.input-group input,
+.input-group select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 1rem;
+    box-sizing: border-box;
+    font-family: var(--font-family);
+}
+.input-group input:focus,
+.input-group select:focus,
+.table-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px var(--primary-color-light);
+}
+
+/* =================================================================== */
+/* 7. الأزرار (Buttons) */
+/* =================================================================== */
+.action-button {
+    display: block; width: 100%; padding: 0.85rem; font-size: 1rem;
+    font-weight: 700; color: white; border-radius: 6px;
+    cursor: pointer; text-decoration: none; transition: background-color 0.2s;
+    border: none; text-align: center;
+}
+/* === تعديل أزرار رأس الصفحة === */
+.header-actions { display: flex; align-items: center; gap: 0.75rem; }
+
+.back-button, .print-button {
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: white; /* كل الأزرار الآن نصها أبيض */
+    border: none;
+}
+
+.back-button {
+    background-color: var(--primary-color); /* اللون الأزرق الجديد */
+}
+.back-button:hover {
+    background-color: #2563EB; /* درجة أغمق */
+}
+
+
+.primary-button { background-color: var(--primary-color); }
+.primary-button:hover { background-color: #3730a3; }
+.edit-button { background-color: var(--edit-color); }
+.edit-button:hover { background-color: #D97706; }
+.save-button { background-color: var(--save-color); }
+.save-button:hover { background-color: #059669; }
+.cancel-button { background-color: var(--cancel-color); color: white; }
+.cancel-button:hover { background-color: #4B5563; }
+.button-group { display: flex; gap: 1rem; margin-top: 2rem; }
+.button-group .action-button { margin-top: 0; }
+/* --- تنسيق موحد لأزرار الإجراءات السفلية --- */
+.page-actions-container .action-button {
+    margin: 0; 
+    width: auto; /* جعل العرض على قدر المحتوى */
+    padding: 0.6rem 1.5rem; /* توحيد الحجم */
+}
+
+/* --- لون زر الطباعة --- */
+.action-button.print-button {
+    background-color: var(--print-color);
+}
+.action-button.print-button:hover {
+    background-color: #7C3AED; 
+}
+
+/* =================================================================== */
+/* 8. تنسيقات الجداول (تصميم أخضر احترافي) */
+/* =================================================================== */
+.card-content {
+    padding: 0;
+    overflow-x: auto; 
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse; 
+    font-size: 0.95rem;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+th, td {
+    padding: 0.8rem 1rem;
+    text-align: right;
+    border-bottom: 1px solid var(--border-color);
+    border-left: 1px solid var(--border-color); 
+}
+
+/* --- تصميم رأس الجدول --- */
+thead th {
+    background-color: #065f46; /* <-- أخضر غامق ومريح */
+    color: white;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+th:last-child, td:last-child {
+    border-left: none;
+}
+
+/* --- تصميم صفوف الجدول --- */
+tbody tr {
+    background-color: white;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f9fafb; /* <-- رمادي فاتح جداً (لون خلفية الصفحة) */
+}
+
+tbody tr:hover {
+    background-color: #ecfdf5; /* <-- أخضر فاتح جداً عند المرور */
+}
+/* =================================================================== */
+/* 1. شق العناوين (رأس الصفحة وعناوين البطاقات) */
+/* =================================================================== */
+
+/* هذا الكود يتجاوز التنسيق العام ويطبق فقط على هذه الصفحة */
+.page-header {
+    background-color: #065f46; 
+    color: white;
+    border-bottom: 1px solid #065f46;
+}
+.page-header h1 {
+    color: white;
+}
+.page-header .back-button {
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+}
+.page-header .back-button:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* --- تصميم عناوين البطاقات (الجديد) --- */
+.details-card .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* --- تم تطبيق التصميم الذي طلبته --- */
+    background-color: white; 
+    color: #065f46; 
+    padding: 0.8rem 1.5rem;
+    margin: 0;
+    border-radius: 8px 8px 0 0; /* لجعل الحواف العلوية فقط دائرية */
+    border: 1px solid var(--border-color);
+    border-right: 5px solid var(--save-color);
+    font-size: 1.2rem;
+    font-weight: 700;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}

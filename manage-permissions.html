@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة الصلاحيات - نظام العيادات</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    
+    <main class="page-container main-content">
+        <div class="page-header">
+            <h1>إدارة صلاحيات المستخدمين</h1>
+            <a href="dashboard.html" class="back-button">&larr; رجوع إلى لوحة التحكم</a>
+        </div>
+        
+        <div class="content-area">
+            <div class="card details-card">
+                <div class="card-content">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>الاسم</th>
+                                <th>البريد الإلكتروني</th>
+                                <th>الدور الحالي</th>
+                                <th>الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>أحمد العلي</td>
+                                <td>ahmad@example.com</td>
+                                <td>مدير</td>
+                                <td class="actions-cell">
+                                    <select class="role-select">
+                                        <option value="manager">مدير</option>
+                                        <option value="inspector">طبيب / مفتش</option>
+                                    </select>
+                                    <button class="action-button-table delete-button">حذف</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>فاطمة صالح</td>
+                                <td>fatima@example.com</td>
+                                <td>طبيب / مفتش</td>
+                                <td class="actions-cell">
+                                    <select class="role-select">
+                                        <option value="inspector">طبيب / مفتش</option>
+                                        <option value="manager">ترقية إلى مدير</option>
+                                    </select>
+                                    <button class="action-button-table delete-button">حذف</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>يوسف خالد</td>
+                                <td>yousef@example.com</td>
+                                <td>طبيب / مفتش</td>
+                                <td class="actions-cell">
+                                    <select class="role-select">
+                                        <option value="inspector">طبيب / مفتش</option>
+                                        <option value="manager">ترقية إلى مدير</option>
+                                    </select>
+                                    <button class="action-button-table delete-button">حذف</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <nav class="bottom-nav">
+        </nav>
+        <script src="app.js"></script>
+</body>
+</html>

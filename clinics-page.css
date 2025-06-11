@@ -1,0 +1,294 @@
+/* =================================================================== */
+/* 1. شريط البحث (Search Bar) */
+/* =================================================================== */
+.search-bar-container {
+    width: 100%;
+    max-width: 900px;
+    padding: 0 2rem 1.5rem;
+    box-sizing: border-box;
+    background-color: #f9fafb;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.search-input-container {
+    position: relative;
+}
+
+.search-input-container input {
+    padding-right: 2.5rem; /* مساحة للأيقونة على اليمين */
+}
+
+.search-input-container .search-icon {
+    position: absolute;
+    top: 50%;
+    right: 0.75rem;
+    transform: translateY(-50%);
+    color: var(--text-light-color);
+    pointer-events: none; /* لمنع الأيقونة من إعاقة النقر على الحقل */
+}
+
+
+/* =================================================================== */
+/* 2. زر الإضافة في الهيدر */
+/* =================================================================== */
+.header-add-button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+    background-color: var(--save-color); /* استخدام اللون الأخضر للإضافة */
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.header-add-button:hover {
+    background-color: #047857; /* درجة أغمق من الأخضر */
+}
+
+.header-add-button svg {
+    width: 20px;
+    height: 20px;
+}
+
+
+/* =================================================================== */
+/* 3. أقسام العيادات (Category Sections) */
+/* =================================================================== */
+.category-section {
+    width: 100%;
+}
+
+
+.category-section h2 {
+    font-size: 1.25rem;
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 0.75rem;
+}
+
+
+/* =================================================================== */
+/* 4. بطاقات العيادات (Clinic Cards) - تصميم بالأخضر */
+/* =================================================================== */
+.clinics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+.clinic-card-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    height: 100%;
+}
+.clinic-item-card {
+    background-color: white; /* --- سنبقي على الخلفية البيضاء النظيفة --- */
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 0; 
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.03);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+.clinic-item-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.07);
+    border-color: var(--save-color); /* حد أخضر عند المرور */
+}
+
+/* --- تصميم اسم العيادة داخل إطار --- */
+.clinic-card-title-frame {
+    background-color: var(--save-color); /* --- تم التعديل: أخضر احترافي --- */
+    color: white; /* --- تم التعديل: نص أبيض ليبرز --- */
+    padding: 1rem 1.25rem;
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 700;
+}
+.clinic-card-phone {
+    padding: 0.75rem 1.25rem 0;
+    margin: 0;
+    font-size: 1rem;
+    color: var(--text-light-color);
+}
+
+/* --- تصميم إطار الإحصائيات داخل البطاقة --- */
+.clinic-card-stats {
+    display: flex;
+    background-color: #F0FDF4; /* --- تم التعديل: أخضر فاتح جداً --- */
+    border-top: 1px solid #BBF7D0; /* --- تم التعديل: حد بلون أخضر أفتح --- */
+    margin-top: 1rem;
+    padding: 0.75rem 1.25rem;
+}
+.stat-item {
+    flex: 1;
+    text-align: center;
+}
+.stat-item:first-child {
+    border-left: 1px solid #BBF7D0; /* --- تم التعديل: حد بلون أخضر أفتح --- */
+}
+.stat-item label {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--text-light-color);
+    margin-bottom: 0.25rem;
+}
+.stat-item span {
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+
+
+/* =================================================================== */
+/* 5. زر عرض الكل (Show All Button) */
+/* =================================================================== */
+show-all-container {
+    text-align: right; /* <-- هذا يضع الزر على جهة اليمين */
+    margin-top: 1.5rem;  /* زيادة المسافة بينه وبين البطاقات التي فوقه */
+    padding: 0 0.5rem;
+}
+
+.show-all-btn {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-decoration: none;
+    border-radius: 6px;
+    cursor: pointer;
+    color: #B45309;
+    background-color: transparent;
+    border: 1px solid #FBBF24;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.show-all-btn:hover {
+    background-color: #FBBF24;
+    color: #78350F;
+}
+/* =================================================================== */
+/* 6. شق العناوين (Titles Section) - باللون الأخضر */
+/* =================================================================== */
+
+/* --- تصميم الهيدر الخاص بصفحة العيادات --- */
+/* هذا التنسيق سيطبق على رأس هذه الصفحة فقط */
+.page-header {
+    background-color: #047857; /* درجة خضراء غامقة واحترافية */
+    border-bottom: 1px solid #065f46;
+}
+
+/* --- تصميم العنوان الرئيسي للصفحة --- */
+.page-header h1 {
+    color: white; /* نص أبيض */
+    font-weight: 700;
+}
+
+/* تعديل زر الإضافة ليتناسب مع الخلفية الغامقة */
+.page-header .header-add-button {
+    background-color: white;
+    color: #047857; /* نص أخضر غامق */
+    font-weight: 700;
+}
+.page-header .header-add-button:hover {
+    background-color: #f0fdf4; /* أخضر فاتح جدا عند المرور */
+}
+
+/* --- تصميم عناوين الأقسام (المستشفيات، المستوصفات، الخ) --- */
+.category-section h2 {
+    border-bottom: none; 
+    
+    /* التصميم الجديد */
+    background-color: white; /* خلفية بيضاء نظيفة */
+    color: #065f46; /* نص بلون أخضر غامق ومميز */
+    
+    padding: 0.8rem 1.5rem;
+    margin: 0 0 1.5rem 0;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    border-right: 5px solid var(--save-color); /* الشريط الجانبي الأخضر */
+    font-size: 1.2rem;
+    font-weight: 700;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    display: flex;
+    align-items: center;
+}
+/* --- تصميم عناوين الأقسام (المستشفيات، المستوصفات، الخ) --- */
+.category-section h2 {
+    border-bottom: none; 
+    
+    /* التصميم الجديد */
+    background-color: white; /* خلفية بيضاء نظيفة */
+    color: #065f46; /* نص بلون أخضر غامق ومميز */
+    
+    padding: 0.8rem 1.5rem;
+    margin: 0 0 1.5rem 0;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    border-right: 5px solid var(--save-color); /* الشريط الجانبي الأخضر */
+    font-size: 1.2rem;
+    font-weight: 700;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    display: flex;
+    align-items: center;
+}
+/* =================================================================== */
+/* 7. شريط البحث (Search Bar) - تصميم جديد */
+/* =================================================================== */
+
+.search-bar-container {
+    width: 100%;
+    max-width: 900px;
+    padding: 1.5rem 2rem; /* زيادة الحشوة العلوية */
+    box-sizing: border-box;
+    background-color: white;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.search-input-container {
+    position: relative;
+}
+
+/* التصميم الأساسي لحقل البحث */
+#clinic-search-input {
+    width: 100%;
+    font-size: 1rem;
+    font-family: var(--font-family);
+    padding: 0.9rem 1rem;
+    padding-right: 3.5rem; /* مساحة واسعة للأيقونة على اليمين */
+    background-color: var(--background-color);
+    border: 1px solid var(--border-color);
+    border-radius: 8px; /* حواف دائرية */
+    box-sizing: border-box;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    -webkit-appearance: none; /* إزالة التصميم الافتراضي للمتصفح */
+    -moz-appearance: none;
+    appearance: none;
+}
+
+/* إزالة زر 'x' الذي يظهر في حقول البحث أحياناً */
+#clinic-search-input::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+/* تنسيق أيقونة البحث */
+.search-input-container .search-icon {
+    position: absolute;
+    top: 50%;
+    right: 1.25rem;
+    transform: translateY(-50%);
+    color: var(--text-light-color);
+    pointer-events: none; /* لمنع الأيقونة من إعاقة النقر */
+}

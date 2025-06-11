@@ -1,0 +1,186 @@
+/* =================================================================== */
+/* 1. شق العناوين (رأس الصفحة وعناوين البطاقات) */
+/* =================================================================== */
+
+/* هذا الكود يتجاوز التنسيق العام ويطبق فقط على هذه الصفحة */
+.page-header {
+    background-color: #065F46; /* أخضر غامق */
+    color: white;
+    border-bottom: 1px solid #064E3B;
+}
+.page-header h1 {
+    color: white;
+}
+.page-header .back-button {
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+}
+.page-header .back-button:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* --- تصميم عناوين البطاقات (الجديد) --- */
+.details-card .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* --- تم تطبيق التصميم الذي طلبته --- */
+    background-color: white; 
+    color: #065f46; 
+    padding: 0.8rem 1.5rem;
+    margin: 0;
+    border-radius: 8px 8px 0 0; /* لجعل الحواف العلوية فقط دائرية */
+    border: 1px solid var(--border-color);
+    border-right: 5px solid var(--save-color);
+    font-size: 1.2rem;
+    font-weight: 700;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+
+
+
+/* =================================================================== */
+/* 2. شق البطاقات العلوية (Info Strip) - تصميم النصفين */
+/* =================================================================== */
+.details-info-strip {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    
+    /* --- التعديل هنا: زيادة حجم الإطار --- */
+    background-color: var(--background-color); /* لون خلفية خفيف جداً للإطار */
+    border: 1px solid var(--border-color);
+    padding: 1.5rem; /* حشوة داخلية كبيرة للإطار */
+    border-radius: 12px; /* حواف دائرية للإطار */
+    margin-bottom: 1.5rem;
+}
+
+.info-box {
+    background-color: white;
+    border-radius: 10px; /* حواف دائرية للبطاقة كلها */
+    border: 1px solid var(--border-color);
+    padding: 0; /* إزالة الحشوة لنسمح للنصفين بأخذ المساحة كاملة */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    overflow: hidden; /* مهم جداً لإظهار الحواف الدائرية بشكل صحيح */
+    display: flex;
+    flex-direction: column;
+}
+
+/* النصف العلوي: العنوان */
+.info-box label {
+    display: block;
+    padding: 0.6rem 1rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    background-color: #ECFDF5; /* خلفية خضراء فاتحة للعنوان */
+    color: #065F46; /* نص أخضر غامق */
+    border-bottom: 1px solid var(--border-color); /* خط فاصل */
+}
+
+/* النصف السفلي: المعلومة */
+.info-box span {
+    display: block;
+    padding: 1rem;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text-color);
+    background-color: white;
+    flex-grow: 1; /* للتأكد من أن هذا الجزء يملأ المساحة المتبقية */
+    display: flex;
+    align-items: center;
+}
+/* =================================================================== */
+/* 3. شق بطاقات أقسام التقييم */
+/* =================================================================== */
+.subsection-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    padding: 1.5rem;
+}
+
+.subsection-button {
+    background-color: white;
+    border: 1px solid var(--border-color);
+    border-radius: 12px; /* زوايا أكثر دائرية */
+    padding: 1.25rem;
+    text-align: right;
+    cursor: pointer;
+    text-decoration: none;
+    color: var(--text-color);
+    font-weight: 600;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem; /* مسافة بين الأيقونة والنص */
+    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out, border-color 0.2s ease-out;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+}
+
+.subsection-button:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+.subsection-button svg {
+    width: 32px; /* حجم مناسب للأيقونة */
+    height: 32px;
+    color: var(--primary-color);
+    flex-shrink: 0; /* لمنع الأيقونة من التقلص */
+}
+/* =================================================================== */
+/* 4. شق الأزرار الخاصة (تعديل ومسح) */
+/* =================================================================== */
+
+/* --- زر التعديل الصغير بجانب العنوان --- */
+.card-header-action {
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-decoration: none;
+    padding: 0.25rem 0.75rem;
+    border-radius: 6px;
+    transition: background-color 0.2s;
+    background-color: #FFFBEB;
+    color: #B45309;
+    border: 1px solid #FEF3C7;
+}
+.card-header-action:hover {
+    background-color: #FEF3C7;
+}
+
+/* --- حاوية زر المسح --- */
+.page-actions-container {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: flex-start; /* <-- تم التعديل هنا لوضع الأزرار على اليمين */
+    gap: 1rem; /* مسافة بين الأزرار */
+}
+
+/* --- تنسيق موحد لأزرار الإجراءات السفلية --- */
+.page-actions-container .action-button {
+    margin: 0; 
+    width: auto; /* جعل العرض على قدر المحتوى */
+    padding: 0.6rem 1.5rem; /* توحيد الحجم */
+}
+
+/* --- لون زر المسح --- */
+.action-button.delete-button {
+    background-color: var(--delete-color);
+}
+.action-button.delete-button:hover {
+    background-color: #b91c1c;
+}
+
+/* --- لون زر الطباعة --- */
+.action-button.print-button {
+    background-color: var(--print-color);
+}
+.action-button.print-button:hover {
+    background-color: #7C3AED; 
+}
